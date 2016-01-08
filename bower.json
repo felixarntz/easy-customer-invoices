@@ -1,0 +1,24 @@
+{
+  "name": "easy-customer-invoices",
+  "version": "1.0.0",
+  "description": "This plugin sets up a simple customer management system with PDF invoicing capabilities.",
+  "keywords": [
+    "wordpress",
+    "plugin",
+    "customer",
+    "invoice",
+    "billing",
+    "management",
+    "custom-post-type",
+    "custom-taxonomy"
+  ],
+  "homepage": "https://wordpress.org/plugins/easy-customer-invoices/",
+  "authors": [
+    {
+      "name": "Felix Arntz",
+      "email": "felix-arntz@leaves-and-love.net",
+      "homepage": "http://leaves-and-love.net"
+    }
+  ],
+  "dependencies": {}
+}

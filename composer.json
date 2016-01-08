@@ -1,0 +1,42 @@
+{
+  "name": "felixarntz/easy-customer-invoices",
+  "description": "This plugin sets up a simple customer management system with PDF invoicing capabilities.",
+  "version": "1.0.0",
+  "license": "GPL-3.0",
+  "type": "wordpress-plugin",
+  "keywords": [
+    "wordpress",
+    "plugin",
+    "customer",
+    "invoice",
+    "billing",
+    "management",
+    "custom-post-type",
+    "custom-taxonomy"
+  ],
+  "homepage": "https://wordpress.org/plugins/easy-customer-invoices/",
+  "authors": [
+    {
+      "name": "Felix Arntz",
+      "email": "felix-arntz@leaves-and-love.net",
+      "homepage": "http://leaves-and-love.net",
+      "role": "Developer"
+    }
+  ],
+  "support": {
+    "email": "felix-arntz@leaves-and-love.net",
+    "issues": "https://github.com/felixarntz/easy-customer-invoices/issues"
+  },
+  "config": {
+    "preferred-install": "dist"
+  },
+  "autoload": {
+    "psr-4": {
+      "WPECI\\": "inc/WPECI/"
+    }
+  },
+  "require": {
+    "composer/installers": "~1.0",
+    "felixarntz/leavesandlove-wp-plugin-util": "1.7.0"
+  }
+}
