@@ -52,6 +52,8 @@ if ( ! class_exists( 'WPECI\App' ) ) {
 		 */
 		protected function run() {
 			Admin::instance()->run();
+			API::Instance()->run();
+			Stats::init();
 		}
 	}
 }

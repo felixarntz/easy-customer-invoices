@@ -22,9 +22,34 @@ module.exports = function(grunt) {
 						' */',
 
 		clean: {
+			admin: [
+				'assets/admin.min.js'
+			],
 			translation: [
 				'languages/easy-customer-invoices.pot'
 			]
+		},
+
+		jshint: {
+			options: {
+				jshintrc: 'assets/.jshintrc'
+			},
+			admin: {
+				src: [
+					'assets/admin.js'
+				]
+			}
+		},
+
+		uglify: {
+			options: {
+				preserveComments: 'some',
+				report: 'min'
+			},
+			admin: {
+				src: 'assets/admin.js',
+				dest: 'assets/admin.min.js'
+			}
 		},
 
 		replace: {
@@ -82,8 +107,16 @@ module.exports = function(grunt) {
  	});
 
 	grunt.loadNpmTasks('grunt-contrib-clean');
+	grunt.loadNpmTasks('grunt-contrib-jshint');
+	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-text-replace');
 	grunt.loadNpmTasks('grunt-wp-i18n');
+
+	grunt.registerTask( 'admin', [
+		'clean:admin',
+		'jshint:admin',
+		'uglify:admin'
+	]);
 
 	grunt.registerTask('translation', [
 		'clean:translation',
@@ -96,10 +129,12 @@ module.exports = function(grunt) {
 	]);
 
 	grunt.registerTask('default', [
+		'admin',
 		'translation'
 	]);
 
 	grunt.registerTask('build', [
+		'admin',
 		'translation',
 		'plugin'
 	]);
