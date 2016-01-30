@@ -112,7 +112,7 @@ if ( ! class_exists( 'WPECI\Admin' ) ) {
 													'amount'						=> array(
 														'title'							=> __( 'Amount', 'easy-customer-invoices' ),
 														'type'							=> 'number',
-														'min'							=> 10.0,
+														'min'							=> 0.0,
 														'step'							=> 0.01,
 													),
 												),
@@ -149,14 +149,15 @@ if ( ! class_exists( 'WPECI\Admin' ) ) {
 											'title'							=> __( 'PayPal Fee Amount', 'easy-customer-invoices' ),
 											'description'					=> __( 'Enter the amount that PayPal charged for the payment.', 'easy-customer-invoices' ),
 											'type'							=> 'number',
-											'min'							=> 1.0,
+											'min'							=> 0.0,
 											'step'							=> 0.01,
 										),
 										'currency_factor'				=> array(
 											'title'							=> __( 'Currency Factor', 'easy-customer-invoices' ),
-											'description'					=> __( 'Enter the factor that you have to divide the amount by to calculate it in your base currency.', 'easy-customer-invoices' ),
+											'description'					=> __( 'Enter the factor that you have to multiply the amount with to calculate it in your base currency.', 'easy-customer-invoices' ),
 											'type'							=> 'number',
-											'min'							=> 0.01,
+											'default'						=> 1.0,
+											'min'							=> 0.0,
 											'step'							=> 0.0001,
 										),
 									),
@@ -174,7 +175,6 @@ if ( ! class_exists( 'WPECI\Admin' ) ) {
 							'supports'						=> array( 'title' ),
 							'position'						=> 10,
 							'table_columns'					=> array(
-								'date'							=> false,
 								'custom-name'					=> array(
 									'title'							=> __( 'Name', 'easy-customer-invoices' ),
 									'custom_callback'				=> array( $this, 'render_customer_name_column' ),
@@ -754,7 +754,6 @@ if ( ! class_exists( 'WPECI\Admin' ) ) {
 			if ( ! $customer_name ) {
 				$customer_name = $customer->get_meta( 'first_name' ) . ' ' . $customer->get_meta( 'last_name' );
 			}
-			$customer_name .= ' (' . $customer->get_data( 'title' ) . ')';
 
 			echo '<a href="' . get_edit_post_link( $customer_id ) . '">' . $customer_name . '</a>';
 		}

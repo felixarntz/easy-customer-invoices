@@ -70,7 +70,7 @@ if ( ! class_exists( 'WPECI\Entities\Invoice' ) ) {
 			if ( $base_currency ) {
 				$factor = $this->get_meta( 'currency_factor' );
 				if ( 0.0 < $factor ) {
-					$subtotal /= $factor;
+					$subtotal *= $factor;
 				}
 			}
 
@@ -88,7 +88,7 @@ if ( ! class_exists( 'WPECI\Entities\Invoice' ) ) {
 			if ( $base_currency ) {
 				$factor = $this->get_meta( 'currency_factor' );
 				if ( 0.0 < $factor ) {
-					$tax /= $factor;
+					$tax *= $factor;
 				}
 			}
 
@@ -105,8 +105,9 @@ if ( ! class_exists( 'WPECI\Entities\Invoice' ) ) {
 
 			if ( $base_currency ) {
 				$factor = $this->get_meta( 'currency_factor' );
+
 				if ( 0.0 < $factor ) {
-					$total /= $factor;
+					$total *= $factor;
 				}
 			}
 
@@ -122,7 +123,7 @@ if ( ! class_exists( 'WPECI\Entities\Invoice' ) ) {
 			if ( $base_currency ) {
 				$factor = $this->get_meta( 'currency_factor' );
 				if ( 0.0 < $factor ) {
-					$fee_amount /= $factor;
+					$fee_amount *= $factor;
 				}
 			}
 
@@ -198,7 +199,7 @@ if ( ! class_exists( 'WPECI\Entities\Invoice' ) ) {
 			$tax_rate = Util::get_tax_amount();
 
 			$customer = $this->get_customer();
-			if ( $customer->is_reverse_charge() ) {
+			if ( $customer && $customer->is_reverse_charge() ) {
 				$tax_mode = 'none';
 			}
 

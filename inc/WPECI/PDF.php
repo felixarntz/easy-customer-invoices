@@ -129,7 +129,7 @@ if ( ! class_exists( 'WPECI\PDF' ) ) {
 
 			// Payment Notes
 			if ( $invoice->get_meta( 'payment_date' ) ) {
-				$this->WriteMultiCell( sprintf( $country->get_meta( 'paid_text' ), $invoice->get_meta( 'payment_date', array( 'format' => $country->get_meta( 'date_format' ) ) ), $invoice->get_payment_method_name() ) . ' ' . $country->get_meta( 'thank_you_text' ), 'L', 1 );
+				$this->WriteMultiCell( sprintf( $country->get_meta( 'paid_text' ), $invoice->get_meta( 'payment_date', null, array( 'format' => $country->get_meta( 'date_format' ) ) ), $invoice->get_payment_method_name() ) . ' ' . $country->get_meta( 'thank_you_text' ), 'L', 1 );
 				$this->Ln();
 				$amount_note = '';
 				if ( 'paypal' === $invoice->get_meta( 'payment_method' ) ) {

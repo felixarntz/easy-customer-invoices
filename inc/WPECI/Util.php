@@ -144,7 +144,7 @@ if ( ! class_exists( 'WPECI\Util' ) ) {
 			$currency = self::get_base_currency();
 			$currencies = self::get_currencies( $currency_mode );
 
-			if ( 'chr' === $mode ) {
+			if ( 'chr' === $currency_mode ) {
 				$currencies[ $currency ] = '[CHR' . $currencies[ $currency ] . ']';
 			}
 
