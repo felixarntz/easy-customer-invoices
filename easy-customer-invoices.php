@@ -22,19 +22,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
 
-if ( ! class_exists( 'WPECI\App' ) ) {
+if ( version_compare( phpversion(), '5.3.0' ) >= 0 && ! class_exists( 'WPECI\App' ) ) {
 	if ( file_exists( dirname( __FILE__ ) . '/easy-customer-invoices/vendor/autoload.php' ) ) {
-		if ( version_compare( phpversion(), '5.3.0' ) >= 0 ) {
-			require_once dirname( __FILE__ ) . '/easy-customer-invoices/vendor/autoload.php';
-		} else {
-			require_once dirname( __FILE__ ) . '/easy-customer-invoices/vendor/felixarntz/leavesandlove-wp-plugin-util/leavesandlove-wp-plugin-loader.php';
-		}
+		require_once dirname( __FILE__ ) . '/easy-customer-invoices/vendor/autoload.php';
 	} elseif ( file_exists( dirname( __FILE__ ) . '/vendor/autoload.php' ) ) {
-		if ( version_compare( phpversion(), '5.3.0' ) >= 0 ) {
-			require_once dirname( __FILE__ ) . '/vendor/autoload.php';
-		} else {
-			require_once dirname( __FILE__ ) . '/vendor/felixarntz/leavesandlove-wp-plugin-util/leavesandlove-wp-plugin-loader.php';
-		}
+		require_once dirname( __FILE__ ) . '/vendor/autoload.php';
+	}
+} elseif ( ! class_exists( 'LaL_WP_Plugin_Loader' ) ) {
+	if ( file_exists( dirname( __FILE__ ) . '/easy-customer-invoices/vendor/felixarntz/leavesandlove-wp-plugin-util/leavesandlove-wp-plugin-loader.php' ) ) {
+		require_once dirname( __FILE__ ) . '/easy-customer-invoices/vendor/felixarntz/leavesandlove-wp-plugin-util/leavesandlove-wp-plugin-loader.php';
+	} elseif ( file_exists( dirname( __FILE__ ) . '/vendor/felixarntz/leavesandlove-wp-plugin-util/leavesandlove-wp-plugin-loader.php' ) ) {
+		require_once dirname( __FILE__ ) . '/vendor/felixarntz/leavesandlove-wp-plugin-util/leavesandlove-wp-plugin-loader.php';
 	}
 }
 
@@ -49,8 +47,8 @@ LaL_WP_Plugin_Loader::load_plugin( array(
 	'phpversion'			=> '5.3.0',
 	'wpversion'				=> '4.4',
 	'plugins'				=> array(
-		'post-types-definitely'	=> '0.5.1',
-		'options-definitely'	=> '0.5.1',
+		'post-types-definitely'	=> '0.6.1',
+		'options-definitely'	=> '0.6.1',
 		'wp-objects'			=> '1.0.0',
 	),
 ) );
