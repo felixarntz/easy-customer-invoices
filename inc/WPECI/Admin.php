@@ -64,6 +64,9 @@ if ( ! class_exists( 'WPECI\Admin' ) ) {
 									'title'							=> __( 'Amount', 'easy-customer-invoices' ),
 									'custom_callback'				=> array( $this, 'render_invoice_amount_column' ),
 								),
+								'meta-payment_date'				=> array(
+									'title'							=> __( 'Payment Date', 'easy-customer-invoices' ),
+								),
 							),
 							'row_actions'					=> array(
 								'show_pdf'						=> array(
