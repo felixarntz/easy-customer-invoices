@@ -30,6 +30,10 @@ if ( ! class_exists( 'WPECI\Entities\Country' ) ) {
 		protected function __construct( $item ) {
 			parent::__construct( $item );
 		}
+
+		public function get_meta( $field = '', $single = null, $formatted = false ) {
+			return parent::get_meta( $field, $single, $formatted );
+		}
 	}
 
 }

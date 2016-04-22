@@ -221,6 +221,10 @@ if ( ! class_exists( 'WPECI\Entities\Invoice' ) ) {
 			}
 		}
 
+		public function get_meta( $field = '', $single = null, $formatted = false ) {
+			return parent::get_meta( $field, $single, $formatted );
+		}
+
 		public function prepare_for_api() {
 
 		}
