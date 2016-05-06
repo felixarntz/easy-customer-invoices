@@ -226,7 +226,56 @@ if ( ! class_exists( 'WPECI\Entities\Invoice' ) ) {
 		}
 
 		public function prepare_for_api() {
+			$data = array(
+				'id'				=> $this->get_ID(),
+				'type'				=> 'eci_invoice',
+				'title'				=> $this->get_data( 'title', true ),
+				'date'				=> $this->get_data( 'date', true ),
+				'contents'			=> $this->get_meta( 'contents' ),
+				'service_period'	=> $this->get_meta( 'service_period' ),
+				'tax_mode'			=> $this->get_meta( 'tax_mode' ),
+				'currency'			=> $this->get_currency(),
+				'subtotal'			=> $this->get_subtotal(),
+				'total'				=> $this->get_total(),
+				'tax'				=> $this->get_tax(),
+				'payment'			=> null,
+				'customer'			=> null,
+			);
 
+			$payment_date = $date = $this->get_meta( 'payment_date', null, true );
+			if ( $payment_date ) {
+				$data['payment'] = array(
+					'date'				=> $payment_date,
+					'method'			=> $this->get_meta( 'payment_method' ),
+					'currency'			=> array(
+						'original'			=> $this->get_currency(),
+						'base'				=> Util::get_base_currency(),
+					),
+					'subtotal'			=> array(
+						'original'			=> $this->get_payment_subtotal(),
+						'base'				=> $this->get_payment_subtotal( true ),
+					),
+					'total'				=> array(
+						'original'			=> $this->get_payment_total(),
+						'base'				=> $this->get_payment_total( true ),
+					),
+					'tax'				=> array(
+						'original'			=> $this->get_payment_tax(),
+						'base'				=> $this->get_payment_tax( true ),
+					),
+					'fee_amount'		=> array(
+						'original'			=> $this->get_payment_fee_amount(),
+						'base'				=> $this->get_payment_fee_amount( true ),
+					),
+				);
+			}
+
+			$customer = $this->get_customer();
+			if ( $customer ) {
+				$data['customer'] = $customer->prepare_for_api();
+			}
+
+			return $data;
 		}
 
 		public static function get_api_schema() {

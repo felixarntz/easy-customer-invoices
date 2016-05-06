@@ -118,7 +118,27 @@ if ( ! class_exists( 'WPECI\Entities\Customer' ) ) {
 		}
 
 		public function prepare_for_api() {
+			$data = array(
+				'id'			=> $this->get_ID(),
+				'type'			=> 'eci_customer',
+				'title'			=> $this->get_data( 'title', true ),
+				'first_name'	=> $this->get_meta( 'first_name' ),
+				'last_name'		=> $this->get_meta( 'last_name' ),
+				'company_name'	=> $this->get_meta( 'company_name' ),
+				'address'		=> $this->get_address(),
+				'email'			=> $this->get_meta( 'email' ),
+				'phone'			=> $this->get_phone_number(),
+				'legal'			=> $this->get_legal_info(),
+				'currency'		=> $this->get_currency(),
+				'country'		=> null,
+			);
 
+			$country = $this->get_country();
+			if ( $country ) {
+				$data['country'] = $country->prepare_for_api();
+			}
+
+			return $data;
 		}
 
 		public static function get_api_schema() {

@@ -6,14 +6,12 @@
 			$.ajax({
 				url: settings.api_root + 'wpeci/invoices/' + id,
 				method: 'GET',
-				data: {
-					_wpnonce: settings.api_nonce
+				beforeSend: function( xhr ) {
+					xhr.setRequestHeader( 'X-WP-Nonce', settings.api_nonce );
 				},
 				dataType: 'json',
 				success: function( result ) {
-					if ( result.success ) {
-						callback( result.data );
-					}
+					callback( result );
 				}
 			});
 		}
@@ -22,14 +20,12 @@
 			$.ajax({
 				url: settings.api_root + 'wpeci/customers/' + id,
 				method: 'GET',
-				data: {
-					_wpnonce: settings.api_nonce
+				beforeSend: function( xhr ) {
+					xhr.setRequestHeader( 'X-WP-Nonce', settings.api_nonce );
 				},
 				dataType: 'json',
 				success: function( result ) {
-					if ( result.success ) {
-						callback( result.data );
-					}
+					callback( result );
 				}
 			});
 		}

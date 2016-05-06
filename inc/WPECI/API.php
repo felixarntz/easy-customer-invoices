@@ -238,7 +238,6 @@ if ( ! class_exists( 'WPECI\API' ) ) {
 		}
 
 		public function check_permissions( $request ) {
-			return true; //TODO: remove this
 			return current_user_can( 'manage_options' );
 		}
 	}

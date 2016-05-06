@@ -34,6 +34,21 @@ if ( ! class_exists( 'WPECI\Entities\Country' ) ) {
 		public function get_meta( $field = '', $single = null, $formatted = false ) {
 			return parent::get_meta( $field, $single, $formatted );
 		}
+
+		public function prepare_for_api() {
+			$data = array(
+				'id'					=> $this->get_ID(),
+				'type'					=> 'eci_country',
+				'title'					=> $this->get_data( 'name' ),
+				'currency'				=> $this->get_meta( 'currency' ),
+				'decimal_separator'		=> $this->get_meta( 'decimal_separator' ),
+				'thousands_separator'	=> $this->get_meta( 'thousands_separator' ),
+				'date_format'			=> $this->get_meta( 'date_format' ),
+				'reverse_charge'		=> $this->get_meta( 'reverse_charge' ),
+			);
+
+			return $data;
+		}
 	}
 
 }

@@ -440,6 +440,12 @@ if ( ! class_exists( 'WPECI\Admin' ) ) {
 													'rows'							=> 2,
 													'default'						=> 'Thank you for your purchase!',
 												),
+												'total_base_currency_text'		=> array(
+													'title'							=> __( 'Total in Base Currency', 'easy-customer-invoices' ),
+													'type'							=> 'textarea',
+													'rows'							=> 2,
+													'default'						=> 'The total amount is %s.',
+												),
 												'paypal_fee_text'				=> array(
 													'title'							=> __( 'PayPal Fee', 'easy-customer-invoices' ),
 													'type'							=> 'textarea',
@@ -450,7 +456,7 @@ if ( ! class_exists( 'WPECI\Admin' ) ) {
 													'title'							=> __( 'Revenue', 'easy-customer-invoices' ),
 													'type'							=> 'textarea',
 													'rows'							=> 2,
-													'default'						=> 'The total revenue is %s.',
+													'default'						=> 'The overall revenue is %s.',
 												),
 												'vendor_phone_text'				=> array(
 													'title'							=> __( 'Vendor Phone', 'easy-customer-invoices' ),

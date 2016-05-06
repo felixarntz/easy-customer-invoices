@@ -132,14 +132,15 @@ if ( ! class_exists( 'WPECI\PDF' ) ) {
 				$this->WriteMultiCell( sprintf( $country->get_meta( 'paid_text' ), $invoice->get_meta( 'payment_date', null, array( 'format' => $country->get_meta( 'date_format' ) ) ), $invoice->get_payment_method_name() ) . ' ' . $country->get_meta( 'thank_you_text' ), 'L', 1 );
 				$this->Ln();
 				$amount_note = '';
-				if ( 'paypal' === $invoice->get_meta( 'payment_method' ) ) {
-					$amount_note .= sprintf( $country->get_meta( 'paypal_fee_text' ), Util::format_price( $invoice->get_payment_fee_amount( true ), 'chr' ) );
-				}
 				if ( $country->get_meta( 'currency' ) !== Util::get_base_currency() ) {
+					$amount_note .= sprintf( $country->get_meta( 'total_base_currency_text' ), Util::format_price( $invoice->get_payment_total( true ), 'chr' ) );
+				}
+				if ( 'paypal' === $invoice->get_meta( 'payment_method' ) ) {
 					if ( ! empty( $amount_note ) ) {
 						$amount_note .= ' ';
 					}
-					$amount_note .= sprintf( $country->get_meta( 'revenue_text' ), Util::format_price( $invoice->get_payment_total( true ), 'chr' ) );
+					$amount_note .= sprintf( $country->get_meta( 'paypal_fee_text' ), Util::format_price( $invoice->get_payment_fee_amount( true ), 'chr' ) );
+					$amount_note .= ' ' . sprintf( $country->get_meta( 'revenue_text' ), Util::format_price( $invoice->get_payment_total( true ) - $invoice->get_payment_fee_amount( true ), 'chr' ) );
 				}
 				$this->WriteMultiCell( $amount_note, 'L', 1 );
 			} else {
