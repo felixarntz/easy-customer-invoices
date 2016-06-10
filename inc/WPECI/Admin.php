@@ -148,6 +148,13 @@ if ( ! class_exists( 'WPECI\Admin' ) ) {
 											'type'							=> 'select',
 											'options'						=> Util::get_payment_methods(),
 										),
+										'deposit_fee_amount'			=> array(
+											'title'							=> __( 'Deposit Fee Amount', 'easy-customer-invoices' ),
+											'description'					=> __( 'Enter the deposit fee (if any).', 'easy-customer-invoices' ),
+											'type'							=> 'number',
+											'min'							=> 0.0,
+											'step'							=> 0.01,
+										),
 										'paypal_fee_amount'				=> array(
 											'title'							=> __( 'PayPal Fee Amount', 'easy-customer-invoices' ),
 											'description'					=> __( 'Enter the amount that PayPal charged for the payment.', 'easy-customer-invoices' ),
@@ -445,6 +452,12 @@ if ( ! class_exists( 'WPECI\Admin' ) ) {
 													'type'							=> 'textarea',
 													'rows'							=> 2,
 													'default'						=> 'The total amount is %s.',
+												),
+												'deposit_fee_text'				=> array(
+													'title'							=> __( 'Deposit Fee', 'easy-customer-invoices' ),
+													'type'							=> 'textarea',
+													'rows'							=> 2,
+													'default'						=> 'A fee of %s has been charged for the deposit.',
 												),
 												'paypal_fee_text'				=> array(
 													'title'							=> __( 'PayPal Fee', 'easy-customer-invoices' ),

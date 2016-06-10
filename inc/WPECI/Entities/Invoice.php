@@ -117,14 +117,15 @@ if ( ! class_exists( 'WPECI\Entities\Invoice' ) ) {
 		public function get_payment_fee_amount( $base_currency = false ) {
 			$fee_amount = 0.0;
 			if ( 'paypal' === $this->get_meta( 'payment_method' ) ) {
-				$fee_amount = $this->get_meta( 'paypal_fee_amount' );
-			}
-
-			if ( $base_currency ) {
-				$factor = $this->get_meta( 'currency_factor' );
-				if ( 0.0 < $factor ) {
-					$fee_amount *= $factor;
+				$fee_amount = $this->get_meta( 'paypal_fee_amount' ); // in payment currency
+				if ( $base_currency ) {
+					$factor = $this->get_meta( 'currency_factor' );
+					if ( 0.0 < $factor ) {
+						$fee_amount *= $factor;
+					}
 				}
+			} elseif ( 'deposit' === $this->get_meta( 'payment_method' ) ) {
+				$fee_amount = $this->get_meta( 'deposit_fee_amount' ); // in base currency
 			}
 
 			return $fee_amount;

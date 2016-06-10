@@ -131,16 +131,23 @@ if ( ! class_exists( 'WPECI\PDF' ) ) {
 			if ( $invoice->get_meta( 'payment_date' ) ) {
 				$this->WriteMultiCell( sprintf( $country->get_meta( 'paid_text' ), $invoice->get_meta( 'payment_date', null, array( 'format' => $country->get_meta( 'date_format' ) ) ), $invoice->get_payment_method_name() ) . ' ' . $country->get_meta( 'thank_you_text' ), 'L', 1 );
 				$this->Ln();
+				$payment_total = $invoice->get_payment_total( true );
 				$amount_note = '';
 				if ( $country->get_meta( 'currency' ) !== Util::get_base_currency() ) {
-					$amount_note .= sprintf( $country->get_meta( 'total_base_currency_text' ), Util::format_price( $invoice->get_payment_total( true ), 'chr' ) );
+					$amount_note .= sprintf( $country->get_meta( 'total_base_currency_text' ), Util::format_price( $payment_total, 'chr' ) );
 				}
-				if ( 'paypal' === $invoice->get_meta( 'payment_method' ) ) {
+				$payment_fee = $invoice->get_payment_fee_amount( true );
+				if ( 0.0 < $payment_fee ) {
 					if ( ! empty( $amount_note ) ) {
 						$amount_note .= ' ';
 					}
-					$amount_note .= sprintf( $country->get_meta( 'paypal_fee_text' ), Util::format_price( $invoice->get_payment_fee_amount( true ), 'chr' ) );
-					$amount_note .= ' ' . sprintf( $country->get_meta( 'revenue_text' ), Util::format_price( $invoice->get_payment_total( true ) - $invoice->get_payment_fee_amount( true ), 'chr' ) );
+					if ( 'paypal' === $invoice->get_meta( 'payment_method' ) ) {
+						$amount_note .= sprintf( $country->get_meta( 'paypal_fee_text' ), Util::format_price( $payment_fee, 'chr' ) );
+						$amount_note .= ' ' . sprintf( $country->get_meta( 'revenue_text' ), Util::format_price( $payment_total - $payment_fee, 'chr' ) );
+					} elseif ( 'deposit' === $invoice->get_meta( 'payment_method' ) ) {
+						$amount_note .= sprintf( $country->get_meta( 'deposit_fee_text' ), Util::format_price( $payment_fee, 'chr' ) );
+						$amount_note .= ' ' . sprintf( $country->get_meta( 'revenue_text' ), Util::format_price( $payment_total - $payment_fee, 'chr' ) );
+					}
 				}
 				$this->WriteMultiCell( $amount_note, 'L', 1 );
 			} else {

@@ -109,17 +109,22 @@
 		}
 
 		var $payment_method = $( 'select#payment_method' );
-		function showhide_paypal_fees() {
+		function showhide_fees() {
 			var value = $payment_method.val();
 			if ( 'paypal' === value ) {
 				$( '#paypal_fee_amount' ).parents( 'tr' ).show();
 			} else {
 				$( '#paypal_fee_amount' ).parents( 'tr' ).hide();
 			}
+			if ( 'deposit' === value ) {
+				$( '#deposit_fee_amount' ).parents( 'tr' ).show();
+			} else {
+				$( '#deposit_fee_amount' ).parents( 'tr' ).hide();
+			}
 		}
 		if ( 0 < $payment_method.length ) {
-			showhide_paypal_fees();
-			$payment_method.on( 'change', showhide_paypal_fees );
+			showhide_fees();
+			$payment_method.on( 'change', showhide_fees );
 		}
 
 	});
