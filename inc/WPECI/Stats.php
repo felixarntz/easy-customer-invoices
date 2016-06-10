@@ -31,6 +31,7 @@ if ( ! class_exists( 'WPECI\Stats' ) ) {
 
 			add_action( 'wpptd_update_post_meta_value_eci_invoice_contents', array( __CLASS__, 'trigger_change' ), 10, 2 );
 			add_action( 'wpptd_update_post_meta_value_eci_invoice_payment_date', array( __CLASS__, 'trigger_change' ), 10, 2 );
+			add_action( 'wpptd_update_post_meta_value_eci_invoice_deposit_fee_amount', array( __CLASS__, 'trigger_change' ), 10, 2 );
 			add_action( 'wpptd_update_post_meta_value_eci_invoice_paypal_fee_amount', array( __CLASS__, 'trigger_change' ), 10, 2 );
 			add_action( 'wpptd_update_post_meta_value_eci_invoice_currency_factor', array( __CLASS__, 'trigger_change' ), 10, 2 );
 		}
