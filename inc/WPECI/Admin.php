@@ -106,7 +106,7 @@ if ( ! class_exists( 'WPECI\Admin' ) ) {
 											'title'							=> __( 'Contents', 'easy-customer-invoices' ),
 											'type'							=> 'repeatable',
 											'repeatable'					=> array(
-												'limit'							=> 3,
+												'limit'							=> 6,
 												'fields'						=> array(
 													'effort'						=> array(
 														'title'							=> __( 'Effort', 'easy-customer-invoices' ),
