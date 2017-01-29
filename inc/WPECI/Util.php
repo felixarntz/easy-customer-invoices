@@ -81,6 +81,10 @@ if ( ! class_exists( 'WPECI\Util' ) ) {
 			return wpod_get_option( 'easy_customer_invoices_data', 'tax_amount' );
 		}
 
+		public static function get_default_country() {
+			return wpod_get_option( 'easy_customer_invoices_data', 'default_country' );
+		}
+
 		public static function get_pdf_text_color() {
 			return wpod_get_option( 'easy_customer_invoices_data', 'text_color' );
 		}

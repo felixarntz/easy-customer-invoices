@@ -37,6 +37,8 @@ if ( ! class_exists( 'WPECI\Admin' ) ) {
 
 			add_action( 'wp_ajax_wpeci_make_invoice_id', array( $this, 'ajax_make_invoice_id' ) );
 			add_action( 'wp_ajax_wpeci_make_customer_id', array( $this, 'ajax_make_customer_id' ) );
+
+			add_filter( 'get_object_terms', array( $this, 'set_default_country' ), 10, 3 );
 		}
 
 		public function add_post_types_and_taxonomies( $wpptd ) {
@@ -736,6 +738,11 @@ if ( ! class_exists( 'WPECI\Admin' ) ) {
 													'type'							=> 'number',
 													'step'							=> 1,
 												),
+												'default_country'				=> array(
+													'title'							=> __( 'Default Country', 'easy-customer-invoices' ),
+													'type'							=> 'select',
+													'options'						=> array( 'terms' => 'eci_country' ),
+												),
 											),
 										),
 										'colors'						=> array(
@@ -904,6 +911,28 @@ if ( ! class_exists( 'WPECI\Admin' ) ) {
 			}
 
 			wp_send_json_success( Util::make_customer_id( $first_name, $last_name, $year, $old_id ) );
+		}
+
+		public function set_default_country( $terms, $object_ids, $taxonomies ) {
+			if ( count( $taxonomies ) > 1 || ! in_array( 'eci_country', $taxonomies, true ) ) {
+				return $terms;
+			}
+
+			if ( ! empty( $terms ) ) {
+				return $terms;
+			}
+
+			$default_country = Util::get_default_country();
+			if ( empty( $default_country ) ) {
+				return $terms;
+			}
+
+			$term = get_term( $default_country );
+			if ( ! $term || is_wp_error( $term ) ) {
+				return $terms;
+			}
+
+			return array( $term );
 		}
 	}
 
