@@ -7,6 +7,8 @@
 
 namespace WPECI;
 
+use WPECI\Entities\Customer;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
@@ -153,6 +155,26 @@ if ( ! class_exists( 'WPECI\Util' ) ) {
 			}
 
 			return number_format_i18n( $price, 2 ) . ' ' . $currencies[ $currency ];
+		}
+
+		public static function get_customer_dropdown() {
+			$customers = get_posts( array(
+				'posts_per_page'	=> -1,
+				'post_type'			=> 'eci_customer',
+				'post_status'		=> 'publish',
+				'orderby'			=> 'post_title',
+				'order'				=> 'asc',
+				'fields'			=> 'ids',
+			) );
+
+			$results = array();
+			foreach ( $customers as $customer_id ) {
+				$customer = Customer::get( $customer_id );
+
+				$results[ $customer_id ] = $customer->get_data( 'title' ) . ' - ' . $customer->get_meta( 'first_name', true ) . ' ' . $customer->get_meta( 'last_name', true );
+			}
+
+			return $results;
 		}
 
 		public static function make_invoice_id( $year = null ) {

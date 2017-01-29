@@ -38,7 +38,7 @@ if ( ! class_exists( 'WPECI\Admin' ) ) {
 			add_action( 'wp_ajax_wpeci_make_invoice_id', array( $this, 'ajax_make_invoice_id' ) );
 			add_action( 'wp_ajax_wpeci_make_customer_id', array( $this, 'ajax_make_customer_id' ) );
 
-			add_filter( 'get_object_terms', array( $this, 'set_default_country' ), 10, 3 );
+			add_filter( 'get_object_terms', array( $this, 'set_default_country' ), 10, 4 );
 		}
 
 		public function add_post_types_and_taxonomies( $wpptd ) {
@@ -92,9 +92,7 @@ if ( ! class_exists( 'WPECI\Admin' ) ) {
 										'customer'						=> array(
 											'title'							=> __( 'Customer ID', 'easy-customer-invoices' ),
 											'type'							=> 'select',
-											'options'						=> array(
-												'posts'							=> 'eci_customer',
-											),
+											'options'						=> Util::get_customer_dropdown(),
 										),
 									),
 								),
@@ -913,7 +911,7 @@ if ( ! class_exists( 'WPECI\Admin' ) ) {
 			wp_send_json_success( Util::make_customer_id( $first_name, $last_name, $year, $old_id ) );
 		}
 
-		public function set_default_country( $terms, $object_ids, $taxonomies ) {
+		public function set_default_country( $terms, $object_ids, $taxonomies, $args ) {
 			if ( count( $taxonomies ) > 1 || ! in_array( 'eci_country', $taxonomies, true ) ) {
 				return $terms;
 			}
@@ -930,6 +928,25 @@ if ( ! class_exists( 'WPECI\Admin' ) ) {
 			$term = get_term( $default_country );
 			if ( ! $term || is_wp_error( $term ) ) {
 				return $terms;
+			}
+
+			$fields = isset( $args['fields'] ) ? $args['fields'] : 'all';
+
+			switch ( $fields ) {
+				case 'ids':
+					return array( (int) $term->term_id );
+				case 'tt_ids':
+					return array( (int) $term->term_taxonomy_id );
+				case 'names':
+					return array( $term->name );
+				case 'slugs':
+					return array( $term->slug );
+				case 'id=>name':
+					return array( $term->term_id => $term->name );
+				case 'id=>slug':
+					return array( $term->term_id => $term->slug );
+				case 'count':
+					return 1;
 			}
 
 			return array( $term );
