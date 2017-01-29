@@ -41,13 +41,29 @@ if ( ! class_exists( 'WPECI\Entities\Vendor' ) ) {
 
 			switch ( $mode ) {
 				case 'name':
+					if ( empty( $company['name'] ) ) {
+						return '';
+					}
+
 					return $company['name'];
 				case 'logo_url':
+					if ( empty( $company['logo'] ) ) {
+						return '';
+					}
+
 					return wp_get_attachment_image_url( $company['logo'], $logo_size );
 				case 'logo_path':
+					if ( empty( $company['logo'] ) ) {
+						return '';
+					}
+
 					return Util::get_attachment_image_path( $company['logo'], $logo_size );
 				case 'logo_id':
 				default:
+					if ( empty( $company['logo'] ) ) {
+						return 0;
+					}
+
 					return $company['logo'];
 			}
 		}
@@ -60,10 +76,22 @@ if ( ! class_exists( 'WPECI\Entities\Vendor' ) ) {
 
 			switch ( $mode ) {
 				case 'line1':
+					if ( empty( $address['street_no'] ) ) {
+						return '';
+					}
+
 					return $address['street_no'];
 				case 'line2':
+					if ( empty( $address['zip_code'] ) || empty( $address['city'] ) ) {
+						return '';
+					}
+
 					return $address['zip_code'] . ' ' . $address['city'];
 				case 'full':
+					if ( empty( $address[ 'street_no'] ) || empty( $address['zip_code'] ) || empty( $address['city'] ) ) {
+						return '';
+					}
+
 					return $address['street_no'] . ', ' . $address['zip_code'] . ' ' . $address['city'];
 				default:
 					if ( ! isset( $address[ $mode ] ) ) {

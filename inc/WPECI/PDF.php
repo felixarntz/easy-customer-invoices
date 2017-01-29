@@ -60,7 +60,10 @@ if ( ! class_exists( 'WPECI\PDF' ) ) {
 			$this->AddPage( 'P' );
 
 			// Logo
-			$this->Image( $vendor->get_company_info( 'logo_path', $invoice_date, 'medium' ), $this->pdf_margin, $this->pdf_margin, 80 );
+			$logo_path = $vendor->get_company_info( 'logo_path', $invoice_date, 'medium' );
+			if ( ! empty( $logo_path ) ) {
+				$this->Image( $logo_path, $this->pdf_margin, $this->pdf_margin, 80 );
+			}
 
 			// Customer ID (and Customer Tax ID)
 			$this->SetXY( $this->pdf_margin + 110, 60 );
