@@ -168,10 +168,30 @@ if ( ! class_exists( 'WPECI\Util' ) ) {
 			) );
 
 			$results = array();
+			$results[0] = __( 'Please select...', 'easy-customer-invoices' );
 			foreach ( $customers as $customer_id ) {
 				$customer = Customer::get( $customer_id );
 
 				$results[ $customer_id ] = $customer->get_data( 'title' ) . ' - ' . $customer->get_meta( 'first_name', true ) . ' ' . $customer->get_meta( 'last_name', true );
+			}
+
+			return $results;
+		}
+
+		public static function get_efforts_dropdown() {
+			$efforts = wpod_get_option( 'easy_customer_invoices_data', 'invoice_efforts' );
+			if ( ! is_array( $efforts ) ) {
+				return array();
+			}
+
+			$results = array();
+			$results[ __( 'No Effort Specified', 'easy-customer-invoices' ) ] = __( 'Please select...', 'easy-customer-invoices' );
+			foreach ( $efforts as $effort ) {
+				if ( empty( $effort ) || empty( $effort['effort'] ) || empty( $effort['amount'] ) ) {
+					continue;
+				}
+
+				$results[ $effort['effort'] ] = $effort['effort'] . ' (' . self::format_price( $effort['amount'] ) . ')';
 			}
 
 			return $results;

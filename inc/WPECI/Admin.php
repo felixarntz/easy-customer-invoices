@@ -110,7 +110,8 @@ if ( ! class_exists( 'WPECI\Admin' ) ) {
 												'fields'						=> array(
 													'effort'						=> array(
 														'title'							=> __( 'Effort', 'easy-customer-invoices' ),
-														'type'							=> 'text',
+														'type'							=> 'select',
+														'options'                       => Util::get_efforts_dropdown(),
 													),
 													'amount'						=> array(
 														'title'							=> __( 'Amount', 'easy-customer-invoices' ),
@@ -759,6 +760,30 @@ if ( ! class_exists( 'WPECI\Admin' ) ) {
 												),
 											),
 										),
+										'efforts'						=> array(
+											'title'							=> __( 'Invoice Efforts', 'easy-customer-invoices' ),
+											'description'					=> __( 'Specify the available efforts to put on your invoices.', 'easy-customer-invoices' ),
+											'fields'						=> array(
+												'invoice_efforts'				=> array(
+													'title'							=> __( 'Efforts', 'easy-customer-invoices' ),
+													'type'							=> 'repeatable',
+													'repeatable'					=> array(
+														'fields'						=> array(
+															'effort'						=> array(
+																'title'							=> __( 'Effort', 'easy-customer-invoices' ),
+																'type'							=> 'text',
+															),
+															'amount'						=> array(
+																'title'							=> __( 'Amount', 'easy-customer-invoices' ),
+																'type'							=> 'number',
+																'min'							=> 0.0,
+																'step'							=> 0.01,
+															),
+														),
+													),
+												),
+											),
+										),
 									),
 								),
 							),
@@ -860,7 +885,9 @@ if ( ! class_exists( 'WPECI\Admin' ) ) {
 		}
 
 		public function enqueue_scripts() {
-			wp_enqueue_script( 'easy-customer-invoices-admin', App::get_url( 'assets/admin.min.js' ), array( 'jquery', 'wp-util' ), App::get_info( 'version' ), true );
+			$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+
+			wp_enqueue_script( 'easy-customer-invoices-admin', App::get_url( 'assets/admin' . $suffix . '.js' ), array( 'jquery', 'wp-util' ), App::get_info( 'version' ), true );
 			wp_localize_script( 'easy-customer-invoices-admin', 'wpeci_settings', array(
 				'api_root'		=> get_rest_url(),
 				'api_nonce'		=> wp_create_nonce( 'wp_rest' ),

@@ -91,7 +91,7 @@
 		var $customer = $( 'select#customer' );
 		function showhide_currency_factor() {
 			var value = $customer.val();
-			if ( ! value ) {
+			if ( ! value || 0 === value || '0' === value ) {
 				$( '#currency_factor' ).parents( 'tr' ).hide();
 				return;
 			}
@@ -126,6 +126,25 @@
 			showhide_fees();
 			$payment_method.on( 'change', showhide_fees );
 		}
+
+		$( document ).on( 'change', '#contents .wpdlib-input-select', function( e ) {
+			var $this = $( this );
+
+			var value = $this.val();
+			var label = '';
+			$this.children( 'option' ).each( function() {
+				if ( $( this ).val() === value ) {
+					label = $( this ).text();
+				}
+			});
+
+			var results = label.match( /\(([0-9\.,]+)/ );
+
+			if ( results && results.length && results[1] ) {
+				var amount = parseFloat( results[1] );
+				$( '#' + $this.attr( 'id' ).replace( '-effort', '-amount' ) ).val( amount );
+			}
+		});
 
 	});
 
