@@ -154,7 +154,7 @@ if ( ! class_exists( 'WPECI\PDF' ) ) {
 				}
 				$this->WriteMultiCell( $amount_note, 'L', 1 );
 			} else {
-				$this->WriteMultiCell( $country->get_meta( 'pay_text' ) . ' ' . $country->get_meta( 'thank_you_text' ), 'L', 1 );
+				$this->WriteMultiCell( sprintf( $country->get_meta( 'pay_text' ), Util::get_pay_within_days() ) . ' ' . $country->get_meta( 'thank_you_text' ), 'L', 1 );
 			}
 
 			$left_col = array();

@@ -438,7 +438,7 @@ if ( ! class_exists( 'WPECI\Admin' ) ) {
 													'title'							=> __( 'Please Pay', 'easy-customer-invoices' ),
 													'type'							=> 'textarea',
 													'rows'							=> 2,
-													'default'						=> 'Please pay the invoice within 14 days and ensure to use the correct reference.',
+													'default'						=> 'Please pay the invoice within %d days and ensure to use the correct reference.',
 												),
 												'paid_text'						=> array(
 													'title'							=> __( 'Paid on X with Y', 'easy-customer-invoices' ),
@@ -736,6 +736,14 @@ if ( ! class_exists( 'WPECI\Admin' ) ) {
 												'reference_prefix'				=> array(
 													'title'							=> __( 'Reference Prefix', 'easy-customer-invoices' ),
 													'type'							=> 'text',
+												),
+												'pay_within_days'				=> array(
+													'title'							=> __( 'Pay Within Days', 'easy-customer-invoices' ),
+													'description'					=> __( 'Enter the amount of days in which an invoice must be paid.', 'easy-customer-invoices' ),
+													'type'							=> 'number',
+													'min'							=> 1,
+													'step'							=> 1,
+													'default'						=> 14,
 												),
 												'base_currency'					=> array(
 													'title'							=> __( 'Base Currency', 'easy-customer-invoices' ),

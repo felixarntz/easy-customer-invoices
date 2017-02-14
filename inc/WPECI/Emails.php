@@ -177,7 +177,7 @@ if ( ! class_exists( 'WPECI\Emails' ) ) {
 		}
 
 		private function tag_pay_within_days( $invoice, $customer, $vendor ) {
-			return '14';
+			return Util::get_pay_within_days();
 		}
 	}
 

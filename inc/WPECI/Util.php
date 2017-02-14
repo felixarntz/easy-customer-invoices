@@ -67,6 +67,10 @@ if ( ! class_exists( 'WPECI\Util' ) ) {
 			return wpod_get_option( 'easy_customer_invoices_data', 'reference_prefix' );
 		}
 
+		public static function get_pay_within_days() {
+			return wpod_get_option( 'easy_customer_invoices_data', 'pay_within_days' );
+		}
+
 		public static function get_base_currency() {
 			return wpod_get_option( 'easy_customer_invoices_data', 'base_currency' );
 		}
