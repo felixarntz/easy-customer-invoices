@@ -45,7 +45,7 @@ if ( ! class_exists( 'WPECI\Stats' ) ) {
 			if ( 'all' === $this->year ) {
 				$label_label = __( 'Year', 'easy-customer-invoices' );
 
-				$years = Util::get_years();
+				$years = array_reverse( Util::get_years() );
 
 				foreach ( $years as $year ) {
 					$results[ $year ] = get_option( '_easy_customer_invoices_year_' . $year . '_stats', array() );
