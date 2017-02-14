@@ -45,6 +45,16 @@ if ( ! class_exists( 'WPECI\Emails' ) ) {
 			);
 		}
 
+		public function get_registered_tag_descriptions() {
+			$descriptions = array();
+
+			foreach ( $this->tags as $name => $data ) {
+				$descriptions[ $name ] = $data['description'];
+			}
+
+			return $descriptions;
+		}
+
 		public function send_invoice( $id ) {
 			$this->current_invoice  = Invoice::get( $id );
 			$this->current_customer = $invoice->get_customer();

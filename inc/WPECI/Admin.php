@@ -37,6 +37,8 @@ if ( ! class_exists( 'WPECI\Admin' ) ) {
 
 			add_action( 'admin_notices', array( $this, 'show_overdue_invoices_notice' ) );
 
+			add_action( 'wpod_field_after', array( $this, 'wpod_field_after' ), 10, 4 );
+
 			add_action( 'wp_ajax_wpeci_make_invoice_id', array( $this, 'ajax_make_invoice_id' ) );
 			add_action( 'wp_ajax_wpeci_make_customer_id', array( $this, 'ajax_make_customer_id' ) );
 
@@ -1013,6 +1015,28 @@ if ( ! class_exists( 'WPECI\Admin' ) ) {
 			}
 			echo '</ul>';
 			echo '</div>';
+		}
+
+		public function wpod_field_after( $field_slug, $field_args, $section_slug, $tab_slug ) {
+			if ( 'easy_customer_invoices_data' !== $tab_slug ) {
+				return;
+			}
+
+			if ( 'email_message' !== $field_slug ) {
+				return;
+			}
+
+			$tags = Emails::instance()->get_registered_tag_descriptions();
+			if ( empty( $tags ) ) {
+				return;
+			}
+
+			echo '<p class="description">' . __( 'You may use the following tags. These will be replaced dynamically.', 'easy-customer-invoices' ) . '</p>';
+			echo '<ul style="margin:2px 0 5px;color:#666;font-style:italic;">';
+			foreach ( $tags as $tag => $description ) {
+				echo '<li><span style="width:300px;padding-left:20px;">{' . $tag . '} </span>' . $description . '</li>';
+			}
+			echo '</ul>';
 		}
 
 		public function ajax_make_invoice_id() {
