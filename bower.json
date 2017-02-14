@@ -20,5 +20,7 @@
       "homepage": "http://leaves-and-love.net"
     }
   ],
-  "dependencies": {}
+  "dependencies": {
+    "c3": "~0.4"
+  }
 }

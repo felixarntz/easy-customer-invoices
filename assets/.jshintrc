@@ -10,6 +10,8 @@
   "browser": true,
   "globals": {
     "jQuery": false,
+    "c3": false,
+    "d3": false,
     "wp": false,
     "wpeci_settings": false,
     "console": false

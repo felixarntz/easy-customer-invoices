@@ -526,6 +526,16 @@ if ( ! class_exists( 'WPECI\Admin' ) ) {
 		public function add_options( $wpod ) {
 			$years = Util::get_years();
 			$year_tabs = array();
+
+			add_action( 'wpod_screen_easy_customer_invoices_stats_enqueue_scripts', array( 'WPECI\Stats', 'enqueue_scripts' ) );
+
+			$stats_manager = new Stats( 'all' );
+			$year_tabs['easy_customer_invoices_stats_all'] = array(
+				'title'       => __( 'All Years', 'easy-customer-invoices' ),
+				'description' => __( 'Here you can find detailed stats about your business for all years.', 'easy-customer-invoices' ),
+				'callback'    => array( $stats_manager, 'output_stats' ),
+			);
+
 			foreach( $years as $year ) {
 				$stats_manager = new Stats( $year );
 				$year_tabs[ 'easy_customer_invoices_stats_' . $year ] = array(

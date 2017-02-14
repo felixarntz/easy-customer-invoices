@@ -25,6 +25,9 @@ module.exports = function(grunt) {
 			admin: [
 				'assets/admin.min.js'
 			],
+			stats: [
+				'assets/stats.min.js'
+			],
 			translation: [
 				'languages/easy-customer-invoices.pot'
 			]
@@ -38,6 +41,11 @@ module.exports = function(grunt) {
 				src: [
 					'assets/admin.js'
 				]
+			},
+			stats: {
+				src: [
+					'assets/stats.js'
+				]
 			}
 		},
 
@@ -49,6 +57,10 @@ module.exports = function(grunt) {
 			admin: {
 				src: 'assets/admin.js',
 				dest: 'assets/admin.min.js'
+			},
+			stats: {
+				src: 'assets/stats.js',
+				dest: 'assets/stats.min.js'
 			}
 		},
 
@@ -118,6 +130,12 @@ module.exports = function(grunt) {
 		'uglify:admin'
 	]);
 
+	grunt.registerTask( 'stats', [
+		'clean:stats',
+		'jshint:stats',
+		'uglify:stats'
+	]);
+
 	grunt.registerTask('translation', [
 		'clean:translation',
 		'makepot:translation'
@@ -130,11 +148,13 @@ module.exports = function(grunt) {
 
 	grunt.registerTask('default', [
 		'admin',
+		'stats',
 		'translation'
 	]);
 
 	grunt.registerTask('build', [
 		'admin',
+		'stats',
 		'translation',
 		'plugin'
 	]);

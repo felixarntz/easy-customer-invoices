@@ -23,7 +23,120 @@ if ( ! class_exists( 'WPECI\Stats' ) ) {
 		}
 
 		public function output_stats() {
+			global $wp_locale;
 
+			$fields = array(
+				'subtotal'   => __( 'Subtotal', 'easy-customer-invoices' ),
+				'tax'        => __( 'Tax', 'easy-customer-invoices' ),
+				'total'      => __( 'Total', 'easy-customer-invoices' ),
+				'fee_amount' => __( 'Fees', 'easy-customer-invoices' ),
+			);
+
+			$cumulative = array();
+
+			foreach ( $fields as $slug => $label ) {
+				$cumulative[ $slug ] = 0.0;
+			}
+
+			$results = array();
+
+			$label_label = '';
+
+			if ( 'all' === $this->year ) {
+				$label_label = __( 'Year', 'easy-customer-invoices' );
+
+				$years = Util::get_years();
+
+				foreach ( $years as $year ) {
+					$results[ $year ] = get_option( '_easy_customer_invoices_year_' . $year . '_stats', array() );
+					$results[ $year ]['label'] = $year;
+
+					foreach ( $fields as $slug => $label ) {
+						if ( isset( $results[ $year ][ $slug ] ) ) {
+							$cumulative[ $slug ] += $results[ $year ][ $slug ];
+						}
+					}
+				}
+			} else {
+				$label_label = __( 'Month', 'easy-customer-invoices' );
+
+				for ( $i = 1; $i <= 12; $i++ ) {
+					$month = zeroise( $i, 2 );
+
+					$results[ $month ] = get_option( '_easy_customer_invoices_yearmonth_' . $this->year . $month . '_stats', array() );
+					$results[ $month ]['label'] = $wp_locale->month[ $month ];
+
+					foreach ( $fields as $slug => $label ) {
+						if ( isset( $results[ $month ][ $slug ] ) ) {
+							$cumulative[ $slug ] += $results[ $month ][ $slug ];
+						}
+					}
+				}
+			}
+
+			?>
+			<div id="results-wrap" class="superwrap">
+				<div id="chart-wrap" class="wrap-primary">
+					<div id="chart" class="results-chart"></div>
+				</div>
+				<div id="table-wrap" class="wrap-secondary">
+					<table class="results-table">
+						<thead>
+							<tr>
+								<th><?php echo $label_label; ?></th>
+								<?php foreach ( $fields as $slug => $label ) : ?>
+									<th><?php echo $label; ?></th>
+								<?php endforeach; ?>
+							</tr>
+						</thead>
+						<tbody>
+							<?php foreach ( $results as $data ) : ?>
+								<tr>
+									<th scope="row"><?php echo $data['label']; ?></th>
+									<?php foreach ( $fields as $slug => $label ) :
+										$amount = isset( $data[ $slug ] ) ? $data[ $slug ] : 0.0;
+									?>
+										<td class="amount-cell"><?php echo Util::format_price( $amount ); ?></td>
+									<?php endforeach; ?>
+								</tr>
+							<?php endforeach; ?>
+						</tbody>
+						<tfoot>
+							<tr>
+								<th scope="row"><?php _e( 'Cumulative', 'easy-customer-invoices' ); ?></th>
+								<?php foreach ( $fields as $slug => $label ) : ?>
+									<td class="amount-cell"><?php echo Util::format_price( $cumulative[ $slug ] ); ?></td>
+								<?php endforeach; ?>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+			</div>
+			<?php
+
+			$currency = Util::get_base_currency();
+			$currencies = Util::get_currencies( 'chr' );
+
+			$script_data = array(
+				'amount_label' => __( 'Amount', 'easy-customer-invoices' ),
+				'result_label' => $label_label,
+				'currency'     => chr( $currencies[ $currency ] ),
+				'fields'       => $fields,
+				'results'      => array_values( $results ),
+			);
+
+			wp_localize_script( 'easy-customer-invoices-stats', 'eci_stats_data', $script_data );
+		}
+
+		public static function enqueue_scripts() {
+			$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+
+			wp_enqueue_script( 'd3', App::get_url( 'assets/vendor/d3/d3' . $suffix . '.js' ), array(), '3.5.0', true );
+			wp_enqueue_script( 'c3', App::get_url( 'assets/vendor/c3/c3' . $suffix . '.js' ), array( 'd3' ), '0.4.11', true );
+			wp_enqueue_script( 'easy-customer-invoices-stats', App::get_url( 'assets/stats' . $suffix . '.js' ), array( 'jquery', 'c3', 'd3' ), App::get_info( 'version' ), true );
+
+			wp_enqueue_style( 'c3', App::get_url( 'assets/vendor/c3/c3' . $suffix . '.css' ), array(), '0.4.11' );
+			wp_enqueue_style( 'easy-customer-invoices-stats', App::get_url( 'assets/stats.css' ), array(), App::get_info( 'version' ) );
 		}
 
 		public static function init() {
