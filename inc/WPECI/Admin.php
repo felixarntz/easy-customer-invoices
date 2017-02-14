@@ -828,6 +828,7 @@ if ( ! class_exists( 'WPECI\Admin' ) ) {
 												'email_message'                 => array(
 													'title'                         => __( 'Message', 'easy-customer-invoices' ),
 													'type'                          => 'wysiwyg',
+													'rows'                          => 10,
 													'default'                       => $default_email_message,
 												),
 												'email_background_color'		=> array(
