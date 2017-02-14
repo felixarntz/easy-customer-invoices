@@ -95,6 +95,22 @@ if ( ! class_exists( 'WPECI\Util' ) ) {
 			return wpod_get_option( 'easy_customer_invoices_data', 'fill_color' );
 		}
 
+		public static function get_email_subject() {
+			return wpod_get_option( 'easy_customer_invoices_data', 'email_subject' );
+		}
+
+		public static function get_email_message() {
+			return wpod_get_option( 'easy_customer_invoices_data', 'email_message' );
+		}
+
+		public static function get_email_background_color() {
+			return wpod_get_option( 'easy_customer_invoices_data', 'email_background_color' );
+		}
+
+		public static function get_email_highlight_color() {
+			return wpod_get_option( 'easy_customer_invoices_data', 'email_highlight_color' );
+		}
+
 		public static function get_relevant( $data, $reference_date = null, $date_field = 'valid_from' ) {
 			if ( null === $reference_date ) {
 				$reference_date = current_time( 'Ymd' );

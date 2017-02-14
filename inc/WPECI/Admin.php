@@ -75,6 +75,10 @@ if ( ! class_exists( 'WPECI\Admin' ) ) {
 									'title'							=> __( 'Show PDF Invoice', 'easy-customer-invoices' ),
 									'callback'						=> array( $this, 'show_pdf_invoice' ),
 								),
+								'send_invoice'					=> array(
+									'title'							=> __( 'Send Invoice via Email', 'easy-customer-invoices' ),
+									'callback'						=> array( $this, 'send_invoice_email' ),
+								),
 							),
 							'bulk_actions'					=> array(
 								'show_pdf'						=> array(
@@ -545,6 +549,12 @@ if ( ! class_exists( 'WPECI\Admin' ) ) {
 				);
 			}
 
+			$default_email_message = sprintf( __( 'Hello %s,', 'easy-customer-invoices' ), '{customer_name}' ) . "\n\n";
+			$default_email_message .= sprintf( __( 'You will find your invoice %1$s attached to this email. Please pay it within %2$s days.', 'easy-customer-invoices' ), '{invoice_id}', '{pay_within_days}' ) . "\n";
+			$default_email_message .= sprintf( __( 'Thanks for purchasing at %s.', 'easy-customer-invoices' ), '{vendor_company_name}' ) . "\n\n";
+			$default_email_message .= __( 'Regards,', 'easy-customer-invoices' ) . "\n";
+			$default_email_message .= '{vendor_company_name}';
+
 			$wpod->add_components( array(
 				'easy_customer_invoices_menu'	=> array(
 					'label'							=> __( 'Invoice Manager', 'easy-customer-invoices' ),
@@ -794,6 +804,32 @@ if ( ! class_exists( 'WPECI\Admin' ) ) {
 												),
 											),
 										),
+										'emails'						=> array(
+											'title'							=> __( 'Invoice Emails', 'easy-customer-invoices' ),
+											'description'					=> __( 'Specify data for the invoice emails.', 'easy-customer-invoices' ),
+											'fields'						=> array(
+												'email_subject'                 => array(
+													'title'                         => __( 'Subject', 'easy-customer-invoices' ),
+													'type'                          => 'text',
+													'default'                       => sprintf( __( 'Your Invoice %s', 'easy-customer-invoices' ), '{invoice_id}' ),
+												),
+												'email_message'                 => array(
+													'title'                         => __( 'Message', 'easy-customer-invoices' ),
+													'type'                          => 'wysiwyg',
+													'default'                       => $default_email_message,
+												),
+												'email_background_color'		=> array(
+													'title'							=> __( 'Background Color', 'easy-customer-invoices' ),
+													'type'							=> 'color',
+													'default'						=> '#e5e5e5',
+												),
+												'email_highlight_color'			=> array(
+													'title'							=> __( 'Highlight Color', 'easy-customer-invoices' ),
+													'type'							=> 'color',
+													'default'						=> '#0073aa',
+												),
+											),
+										),
 									),
 								),
 							),
@@ -892,6 +928,16 @@ if ( ! class_exists( 'WPECI\Admin' ) ) {
 			$pdf->finalize();
 
 			exit;
+		}
+
+		public function send_invoice_email( $id ) {
+			$status = Emails::instance()->send_invoice( $id );
+
+			if ( ! $status ) {
+				return new WP_Error( 'send_invoice_error', __( 'The email containing the invoice could not be sent.', 'easy-customer-invoices' ) );
+			}
+
+			return __( 'The email containing the invoice was sent successfully.', 'easy-customer-invoices' );
 		}
 
 		public function enqueue_scripts() {
