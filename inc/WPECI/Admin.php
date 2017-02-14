@@ -35,6 +35,8 @@ if ( ! class_exists( 'WPECI\Admin' ) ) {
 			add_action( 'wpptd_post_type_eci_invoice_edit_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 			add_action( 'wpptd_post_type_eci_customer_edit_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 
+			add_action( 'admin_notices', array( $this, 'show_overdue_invoices_notice' ) );
+
 			add_action( 'wp_ajax_wpeci_make_invoice_id', array( $this, 'ajax_make_invoice_id' ) );
 			add_action( 'wp_ajax_wpeci_make_customer_id', array( $this, 'ajax_make_customer_id' ) );
 
@@ -958,6 +960,59 @@ if ( ! class_exists( 'WPECI\Admin' ) ) {
 				'ajax_nonce'	=> wp_create_nonce( 'eci_ajax' ),
 				'currency'		=> Util::get_base_currency(),
 			) );
+		}
+
+		public function show_overdue_invoices_notice() {
+			$screen = get_current_screen();
+
+			if ( 'edit-eci_invoice' !== $screen->id ) {
+				return;
+			}
+
+			$pay_within_days = Util::get_pay_within_days();
+
+			$reference_date = current_time( 'timestamp' ) - ( $pay_within_days + 1 ) * DAY_IN_SECONDS;
+			$reference_date = date_i18n( 'Y-m-d', $reference_date );
+
+			$invoice_ids = get_posts( array(
+				'fields'         => 'ids',
+				'posts_per_page' => 10,
+				'post_status'    => 'publish',
+				'post_type'      => 'eci_invoice',
+				'orderby'        => 'post_date',
+				'order'          => 'ASC',
+				'date_query'     => array(
+					'column' => 'post_date',
+					'after'  => $reference_date,
+				),
+				'meta_query'     => array(
+					'relation' => 'OR',
+					array(
+						'key'     => 'payment_date',
+						'value'   => array( '', false ),
+						'compare' => 'IN',
+						'type'    => 'DATE',
+					),
+					array(
+						'key'     => 'payment_date',
+						'compare' => 'NOT EXISTS',
+						'type'    => 'DATE',
+					),
+				),
+			) );
+
+			if ( empty( $invoice_ids ) ) {
+				return;
+			}
+
+			echo '<div class="notice notice-warning">';
+			echo '<p><strong>' . __( 'Warning:', 'easy-customer-invoices' ) . '</strong> ' . __( 'The following invoices are overdue:', 'easy-customer-invoices' ) . '</p>';
+			echo '<ul>';
+			foreach ( $invoice_ids as $invoice_id ) {
+				echo '<li>' . get_the_title( $invoice_id ) . '</li>';
+			}
+			echo '</ul>';
+			echo '</div>';
 		}
 
 		public function ajax_make_invoice_id() {
