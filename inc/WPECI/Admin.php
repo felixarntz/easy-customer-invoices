@@ -973,7 +973,7 @@ if ( ! class_exists( 'WPECI\Admin' ) ) {
 
 			$pay_within_days = Util::get_pay_within_days();
 
-			$reference_date = current_time( 'timestamp' ) - ( $pay_within_days + 1 ) * DAY_IN_SECONDS;
+			$reference_date = current_time( 'timestamp' ) - $pay_within_days * DAY_IN_SECONDS;
 			$reference_date = date_i18n( 'Y-m-d', $reference_date );
 
 			$invoice_ids = get_posts( array(
@@ -985,20 +985,14 @@ if ( ! class_exists( 'WPECI\Admin' ) ) {
 				'order'          => 'ASC',
 				'date_query'     => array(
 					'column' => 'post_date',
-					'after'  => $reference_date,
+					'before' => $reference_date,
 				),
 				'meta_query'     => array(
-					'relation' => 'OR',
+					'relation' => 'AND',
 					array(
 						'key'     => 'payment_date',
 						'value'   => array( '', false ),
 						'compare' => 'IN',
-						'type'    => 'DATE',
-					),
-					array(
-						'key'     => 'payment_date',
-						'compare' => 'NOT EXISTS',
-						'type'    => 'DATE',
 					),
 				),
 			) );
@@ -1007,11 +1001,15 @@ if ( ! class_exists( 'WPECI\Admin' ) ) {
 				return;
 			}
 
+			$base_url = add_query_arg( 'post_type', 'eci_invoice', admin_url( 'edit.php' ) );
+
 			echo '<div class="notice notice-warning">';
 			echo '<p><strong>' . __( 'Warning:', 'easy-customer-invoices' ) . '</strong> ' . __( 'The following invoices are overdue:', 'easy-customer-invoices' ) . '</p>';
 			echo '<ul>';
 			foreach ( $invoice_ids as $invoice_id ) {
-				echo '<li>' . get_the_title( $invoice_id ) . '</li>';
+				$title = get_the_title( $invoice_id );
+
+				echo '<li><a href="' . esc_url( add_query_arg( 's', $title, $base_url ) ) . '">' . $title . '</a></li>';
 			}
 			echo '</ul>';
 			echo '</div>';
