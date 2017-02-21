@@ -99,20 +99,36 @@ if ( ! class_exists( 'WPECI\Util' ) ) {
 			return wpod_get_option( 'easy_customer_invoices_data', 'fill_color' );
 		}
 
-		public static function get_email_subject() {
-			return wpod_get_option( 'easy_customer_invoices_data', 'email_subject' );
+		public static function get_invoice_email_subject() {
+			return wpod_get_option( 'easy_customer_invoices_data', 'invoice_email_subject' );
 		}
 
-		public static function get_email_message() {
-			return wpod_get_option( 'easy_customer_invoices_data', 'email_message' );
+		public static function get_invoice_email_message() {
+			return wpod_get_option( 'easy_customer_invoices_data', 'invoice_email_message' );
 		}
 
-		public static function get_email_background_color() {
-			return wpod_get_option( 'easy_customer_invoices_data', 'email_background_color' );
+		public static function get_invoice_email_background_color() {
+			return wpod_get_option( 'easy_customer_invoices_data', 'invoice_email_background_color' );
 		}
 
-		public static function get_email_highlight_color() {
-			return wpod_get_option( 'easy_customer_invoices_data', 'email_highlight_color' );
+		public static function get_invoice_email_highlight_color() {
+			return wpod_get_option( 'easy_customer_invoices_data', 'invoice_email_highlight_color' );
+		}
+
+		public static function get_estimate_email_subject() {
+			return wpod_get_option( 'easy_customer_invoices_data', 'estimate_email_subject' );
+		}
+
+		public static function get_estimate_email_message() {
+			return wpod_get_option( 'easy_customer_invoices_data', 'estimate_email_message' );
+		}
+
+		public static function get_estimate_email_background_color() {
+			return wpod_get_option( 'easy_customer_invoices_data', 'estimate_email_background_color' );
+		}
+
+		public static function get_estimate_email_highlight_color() {
+			return wpod_get_option( 'easy_customer_invoices_data', 'estimate_email_highlight_color' );
 		}
 
 		public static function get_relevant( $data, $reference_date = null, $date_field = 'valid_from' ) {
@@ -199,7 +215,7 @@ if ( ! class_exists( 'WPECI\Util' ) ) {
 		}
 
 		public static function get_efforts_dropdown() {
-			$efforts = wpod_get_option( 'easy_customer_invoices_data', 'invoice_efforts' );
+			$efforts = wpod_get_option( 'easy_customer_invoices_data', 'efforts' );
 			if ( ! is_array( $efforts ) ) {
 				return array();
 			}
@@ -218,25 +234,40 @@ if ( ! class_exists( 'WPECI\Util' ) ) {
 		}
 
 		public static function make_invoice_id( $year = null ) {
+			return self::make_entity_id( 'invoice', $year );
+		}
+
+		public static function make_estimate_id( $year = null ) {
+			return self::make_entity_id( 'estimate', $year );
+		}
+
+		private static function make_entity_id( $mode, $year = null ) {
 			if ( null === $year ) {
 				$year = current_time( 'Y' );
 			}
 
-			$invoices = get_posts( array(
+			if ( 'estimate' === $mode ) {
+				$post_type = 'eci_estimate';
+				$prefix    = 'AN';
+			} else {
+				$post_type = 'eci_invoice';
+				$prefix    = 'RE';
+			}
+
+			$entities = get_posts( array(
 				'posts_per_page'	=> 1,
-				'post_type'			=> 'eci_invoice',
+				'post_type'			=> $post_type,
 				'post_status'		=> 'publish',
 				'year'				=> absint( $year ),
 				'orderby'			=> 'date',
 				'order'				=> 'DESC',
 			) );
 
-			$prefix = 'RE';
 			$num_pad = 4;
 
 			$count = 1;
-			if ( 0 < count( $invoices ) ) {
-				$count += absint( substr( get_the_title( $invoices[0]->ID ), strlen( $prefix ), $num_pad ) );
+			if ( 0 < count( $entities ) ) {
+				$count += absint( substr( get_the_title( $entities[0]->ID ), strlen( $prefix ), $num_pad ) );
 			}
 
 			return $prefix . zeroise( $count, $num_pad ) . '-' . $year;

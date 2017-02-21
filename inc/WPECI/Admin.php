@@ -8,6 +8,7 @@
 namespace WPECI;
 
 use WPECI\Entities\Invoice as Invoice;
+use WPECI\Entities\Estimate as Estimate;
 use WPECI\Entities\Customer as Customer;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -33,6 +34,7 @@ if ( ! class_exists( 'WPECI\Admin' ) ) {
 			add_action( 'wpod', array( $this, 'add_options' ) );
 
 			add_action( 'wpptd_post_type_eci_invoice_edit_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+			add_action( 'wpptd_post_type_eci_estimate_edit_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 			add_action( 'wpptd_post_type_eci_customer_edit_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 
 			add_action( 'admin_notices', array( $this, 'show_overdue_invoices_notice' ) );
@@ -40,6 +42,7 @@ if ( ! class_exists( 'WPECI\Admin' ) ) {
 			add_action( 'wpod_field_after', array( $this, 'wpod_field_after' ), 10, 4 );
 
 			add_action( 'wp_ajax_wpeci_make_invoice_id', array( $this, 'ajax_make_invoice_id' ) );
+			add_action( 'wp_ajax_wpeci_make_estimate_id', array( $this, 'ajax_make_estimate_id' ) );
 			add_action( 'wp_ajax_wpeci_make_customer_id', array( $this, 'ajax_make_customer_id' ) );
 
 			add_filter( 'get_object_terms', array( $this, 'set_default_country' ), 10, 4 );
@@ -54,6 +57,7 @@ if ( ! class_exists( 'WPECI\Admin' ) ) {
 						'eci_invoice'					=> array(
 							'title'							=> __( 'Invoices', 'easy-customer-invoices' ),
 							'singular_title'				=> __( 'Invoice', 'easy-customer-invoices' ),
+							'title_gender'					=> _x( 'm', 'invoice title gender', 'easy-customer-invoices' ),
 							'enter_title_here'				=> __( 'Enter invoice ID', 'easy-customer-invoices' ),
 							'public'						=> false,
 							'show_ui'						=> true,
@@ -183,9 +187,101 @@ if ( ! class_exists( 'WPECI\Admin' ) ) {
 								),
 							),
 						),
+						'eci_estimate'					=> array(
+							'title'							=> __( 'Estimates', 'easy-customer-invoices' ),
+							'singular_title'				=> __( 'Estimate', 'easy-customer-invoices' ),
+							'title_gender'					=> _x( 'm', 'estimate title gender', 'easy-customer-invoices' ),
+							'enter_title_here'				=> __( 'Enter estimate ID', 'easy-customer-invoices' ),
+							'public'						=> false,
+							'show_ui'						=> true,
+							'show_in_admin_bar'				=> false,
+							'show_add_new_in_menu'			=> false,
+							'supports'						=> array( 'title' ),
+							'position'						=> 5,
+							'table_columns'					=> array(
+								'custom-customer'				=> array(
+									'title'							=> __( 'Customer', 'easy-customer-invoices' ),
+									'custom_callback'				=> array( $this, 'render_estimate_customer_column' ),
+								),
+								'custom-amount'					=> array(
+									'title'							=> __( 'Amount', 'easy-customer-invoices' ),
+									'custom_callback'				=> array( $this, 'render_estimate_amount_column' ),
+								),
+							),
+							'row_actions'					=> array(
+								'show_pdf'						=> array(
+									'title'							=> __( 'Show PDF Estimate', 'easy-customer-invoices' ),
+									'callback'						=> array( $this, 'show_pdf_estimate' ),
+								),
+								'send_invoice'					=> array(
+									'title'							=> __( 'Send Estimate via Email', 'easy-customer-invoices' ),
+									'callback'						=> array( $this, 'send_estimate_email' ),
+								),
+							),
+							'metaboxes'						=> array(
+								'general'						=> array(
+									'title'							=> __( 'General Information', 'easy-customer-invoices' ),
+									'description'					=> __( 'Here you can enter general information for the estimate.', 'easy-customer-invoices' ),
+									'context'						=> 'normal',
+									'priority'						=> 'high',
+									'fields'						=> array(
+										'customer'						=> array(
+											'title'							=> __( 'Customer ID', 'easy-customer-invoices' ),
+											'type'							=> 'select',
+											'options'						=> Util::get_customer_dropdown(),
+										),
+										'message'						=> array(
+											'title'							=> __( 'Message', 'easy-customer-invoices' ),
+											'description'                   => __( 'Enter a message to put at the top of the estimate.', 'easy-customer-invoices' ),
+											'type'							=> 'textarea',
+										),
+										'due_date'						=> array(
+											'title'							=> __( 'Due Date', 'easy-customer-invoices' ),
+											'description'                   => __( 'Enter a date until which this estimate should be valid.', 'easy-customer-invoices' ),
+											'type'							=> 'date',
+										),
+									),
+								),
+								'content'						=> array(
+									'title'							=> __( 'Estimate Content', 'easy-customer-invoices' ),
+									'description'					=> __( 'Here you can enter the actual efforts for the estimate.', 'easy-customer-invoices' ),
+									'context'						=> 'normal',
+									'priority'						=> 'high',
+									'fields'						=> array(
+										'contents'						=> array(
+											'title'							=> __( 'Contents', 'easy-customer-invoices' ),
+											'type'							=> 'repeatable',
+											'repeatable'					=> array(
+												'limit'							=> 6,
+												'fields'						=> array(
+													'effort'						=> array(
+														'title'							=> __( 'Effort', 'easy-customer-invoices' ),
+														'type'							=> 'select',
+														'options'                       => Util::get_efforts_dropdown(),
+													),
+													'amount'						=> array(
+														'title'							=> __( 'Amount', 'easy-customer-invoices' ),
+														'type'							=> 'number',
+														'min'							=> 0.0,
+														'step'							=> 0.01,
+													),
+												),
+											),
+										),
+										'tax_mode'						=> array(
+											'title'							=> __( 'Tax Mode', 'easy-customer-invoices' ),
+											'type'							=> 'select',
+											'options'						=> Util::get_tax_modes(),
+											'default'						=> Util::get_default_tax_mode(),
+										),
+									),
+								),
+							),
+						),
 						'eci_customer'					=> array(
 							'title'							=> __( 'Customers', 'easy-customer-invoices' ),
 							'singular_title'				=> __( 'Customer', 'easy-customer-invoices' ),
+							'title_gender'					=> _x( 'm', 'customer title gender', 'easy-customer-invoices' ),
 							'enter_title_here'				=> __( 'Enter customer name', 'easy-customer-invoices' ),
 							'public'						=> false,
 							'show_ui'						=> true,
@@ -319,6 +415,7 @@ if ( ! class_exists( 'WPECI\Admin' ) ) {
 								'eci_country'					=> array(
 									'title'							=> __( 'Countries', 'easy-customer-invoices' ),
 									'singular_title'				=> __( 'Country', 'easy-customer-invoices' ),
+									'title_gender'					=> _x( 'm', 'country title gender', 'easy-customer-invoices' ),
 									'public'						=> false,
 									'show_ui'						=> true,
 									'show_tagcloud'					=> false,
@@ -520,6 +617,21 @@ if ( ! class_exists( 'WPECI\Admin' ) ) {
 													'type'							=> 'text',
 													'default'						=> 'Tax ID:',
 												),
+												'estimate_id_text'				=> array(
+													'title'							=> __( 'Estimate ID', 'easy-customer-invoices' ),
+													'type'							=> 'text',
+													'default'						=> 'Estimate ID:',
+												),
+												'estimate_date_text'			=> array(
+													'title'							=> __( 'Estimate Date', 'easy-customer-invoices' ),
+													'type'							=> 'text',
+													'default'						=> 'Estimate Date:',
+												),
+												'estimate_due_date_text'		=> array(
+													'title'							=> __( 'Estimate Due Date', 'easy-customer-invoices' ),
+													'type'							=> 'text',
+													'default'						=> 'Valid due:',
+												),
 											),
 										),
 									),
@@ -553,11 +665,17 @@ if ( ! class_exists( 'WPECI\Admin' ) ) {
 				);
 			}
 
-			$default_email_message = sprintf( __( 'Hello %s,', 'easy-customer-invoices' ), '{customer_name}' ) . "\n\n";
-			$default_email_message .= sprintf( __( 'You will find your invoice %1$s attached to this email. Please pay it within %2$s days.', 'easy-customer-invoices' ), '{invoice_id}', '{pay_within_days}' ) . "\n";
-			$default_email_message .= sprintf( __( 'Thanks for purchasing at %s.', 'easy-customer-invoices' ), '{vendor_company_name}' ) . "\n\n";
-			$default_email_message .= __( 'Regards,', 'easy-customer-invoices' ) . "\n";
-			$default_email_message .= '{vendor_company_name}';
+			$default_invoice_email_message = sprintf( __( 'Hello %s,', 'easy-customer-invoices' ), '{customer_name}' ) . "\n\n";
+			$default_invoice_email_message .= sprintf( __( 'You will find your invoice %1$s attached to this email. Please pay it within %2$s days.', 'easy-customer-invoices' ), '{invoice_id}', '{pay_within_days}' ) . "\n";
+			$default_invoice_email_message .= sprintf( __( 'Thanks for purchasing at %s.', 'easy-customer-invoices' ), '{vendor_company_name}' ) . "\n\n";
+			$default_invoice_email_message .= __( 'Regards,', 'easy-customer-invoices' ) . "\n";
+			$default_invoice_email_message .= '{vendor_company_name}';
+
+			$default_estimate_email_message = sprintf( __( 'Hello %s,', 'easy-customer-invoices' ), '{customer_name}' ) . "\n\n";
+			$default_estimate_email_message .= sprintf( __( 'You will find your estimate %s attached to this email.', 'easy-customer-invoices' ), '{invoice_id}' ) . "\n";
+			$default_estimate_email_message .= __( 'Thanks for your interest in our services.', 'easy-customer-invoices' ) . "\n\n";
+			$default_estimate_email_message .= __( 'Regards,', 'easy-customer-invoices' ) . "\n";
+			$default_estimate_email_message .= '{vendor_company_name}';
 
 			$wpod->add_components( array(
 				'easy_customer_invoices_menu'	=> array(
@@ -793,10 +911,10 @@ if ( ! class_exists( 'WPECI\Admin' ) ) {
 											),
 										),
 										'efforts'						=> array(
-											'title'							=> __( 'Invoice Efforts', 'easy-customer-invoices' ),
-											'description'					=> __( 'Specify the available efforts to put on your invoices.', 'easy-customer-invoices' ),
+											'title'							=> __( 'Efforts', 'easy-customer-invoices' ),
+											'description'					=> __( 'Specify the available efforts to put on your invoices and estimates.', 'easy-customer-invoices' ),
 											'fields'						=> array(
-												'invoice_efforts'				=> array(
+												'efforts'						=> array(
 													'title'							=> __( 'Efforts', 'easy-customer-invoices' ),
 													'type'							=> 'repeatable',
 													'repeatable'					=> array(
@@ -816,27 +934,54 @@ if ( ! class_exists( 'WPECI\Admin' ) ) {
 												),
 											),
 										),
-										'emails'						=> array(
+										'invoice_emails'				=> array(
 											'title'							=> __( 'Invoice Emails', 'easy-customer-invoices' ),
 											'description'					=> __( 'Specify data for the invoice emails.', 'easy-customer-invoices' ),
 											'fields'						=> array(
-												'email_subject'                 => array(
+												'invoice_email_subject'         => array(
 													'title'                         => __( 'Subject', 'easy-customer-invoices' ),
 													'type'                          => 'text',
 													'default'                       => sprintf( __( 'Your Invoice %s', 'easy-customer-invoices' ), '{invoice_id}' ),
 												),
-												'email_message'                 => array(
+												'invoice_email_message'         => array(
 													'title'                         => __( 'Message', 'easy-customer-invoices' ),
 													'type'                          => 'wysiwyg',
 													'rows'                          => 10,
-													'default'                       => $default_email_message,
+													'default'                       => $default_invoice_email_message,
 												),
-												'email_background_color'		=> array(
+												'invoice_email_background_color'=> array(
 													'title'							=> __( 'Background Color', 'easy-customer-invoices' ),
 													'type'							=> 'color',
 													'default'						=> '#e5e5e5',
 												),
-												'email_highlight_color'			=> array(
+												'invoice_email_highlight_color'	=> array(
+													'title'							=> __( 'Highlight Color', 'easy-customer-invoices' ),
+													'type'							=> 'color',
+													'default'						=> '#0073aa',
+												),
+											),
+										),
+										'estimate_emails'				=> array(
+											'title'							=> __( 'Estimate Emails', 'easy-customer-invoices' ),
+											'description'					=> __( 'Specify data for the estimate emails.', 'easy-customer-invoices' ),
+											'fields'						=> array(
+												'estimate_email_subject'        => array(
+													'title'                         => __( 'Subject', 'easy-customer-invoices' ),
+													'type'                          => 'text',
+													'default'                       => sprintf( __( 'Your Estimate %s', 'easy-customer-invoices' ), '{estimate_id}' ),
+												),
+												'estimate_email_message'        => array(
+													'title'                         => __( 'Message', 'easy-customer-invoices' ),
+													'type'                          => 'wysiwyg',
+													'rows'                          => 10,
+													'default'                       => $default_estimate_email_message,
+												),
+												'estimate_email_background_color'=> array(
+													'title'							=> __( 'Background Color', 'easy-customer-invoices' ),
+													'type'							=> 'color',
+													'default'						=> '#e5e5e5',
+												),
+												'estimate_email_highlight_color'=> array(
 													'title'							=> __( 'Highlight Color', 'easy-customer-invoices' ),
 													'type'							=> 'color',
 													'default'						=> '#0073aa',
@@ -853,9 +998,29 @@ if ( ! class_exists( 'WPECI\Admin' ) ) {
 		}
 
 		public function render_invoice_customer_column( $id ) {
-			$invoice = Invoice::get( $id );
+			$this->render_entity_customer_column( 'invoice', $id );
+		}
 
-			$customer = $invoice->get_customer();
+		public function render_invoice_amount_column( $id ) {
+			$this->render_entity_amount_column( 'invoice', $id );
+		}
+
+		public function render_estimate_customer_column( $id ) {
+			$this->render_entity_customer_column( 'estimate', $id );
+		}
+
+		public function render_estimate_amount_column( $id ) {
+			$this->render_entity_amount_column( 'estimate', $id );
+		}
+
+		private function render_entity_customer_column( $type, $id ) {
+			if ( 'estimate' === $type ) {
+				$entity = Estimate::get( $id );
+			} else {
+				$entity = Invoice::get( $id );
+			}
+
+			$customer = $entity->get_customer();
 			if ( ! $customer ) {
 				return;
 			}
@@ -869,10 +1034,14 @@ if ( ! class_exists( 'WPECI\Admin' ) ) {
 			echo '<a href="' . get_edit_post_link( $customer_id ) . '">' . $customer_name . '</a>';
 		}
 
-		public function render_invoice_amount_column( $id ) {
-			$invoice = Invoice::get( $id );
+		private function render_entity_amount_column( $type, $id ) {
+			if ( 'estimate' === $type ) {
+				$entity = Estimate::get( $id );
+			} else {
+				$entity = Invoice::get( $id );
+			}
 
-			echo $invoice->format_price( $invoice->get_total() );
+			echo $entity->format_price( $entity->get_total() );
 		}
 
 		public function render_customer_name_column( $id ) {
@@ -925,7 +1094,7 @@ if ( ! class_exists( 'WPECI\Admin' ) ) {
 		public function show_pdf_invoice( $id ) {
 			$invoice = Invoice::get( $id );
 
-			$pdf = new PDF( $invoice->get_data( 'title' ) );
+			$pdf = new Invoice_PDF( $invoice->get_data( 'title' ) );
 			$pdf->render( $invoice );
 			$pdf->finalize();
 
@@ -933,11 +1102,21 @@ if ( ! class_exists( 'WPECI\Admin' ) ) {
 		}
 
 		public function show_pdf_invoices( $ids ) {
-			$pdf = new PDF( __( 'Invoices', 'easy-customer-invoices' ) );
+			$pdf = new Invoice_PDF( __( 'Invoices', 'easy-customer-invoices' ) );
 			foreach ( $ids as $id ) {
 				$invoice = Invoice::get( $id );
 				$pdf->render( $invoice );
 			}
+			$pdf->finalize();
+
+			exit;
+		}
+
+		public function show_pdf_estimate( $id ) {
+			$estimate = Estimate::get( $id );
+
+			$pdf = new Estimate_PDF( $estimate->get_data( 'title' ) );
+			$pdf->render( $estimate );
 			$pdf->finalize();
 
 			exit;
@@ -951,6 +1130,16 @@ if ( ! class_exists( 'WPECI\Admin' ) ) {
 			}
 
 			return __( 'The email containing the invoice was sent successfully.', 'easy-customer-invoices' );
+		}
+
+		public function send_estimate_email( $id ) {
+			$status = Emails::instance()->send_estimate( $id );
+
+			if ( ! $status ) {
+				return new WP_Error( 'send_estimate_error', __( 'The email containing the estimate could not be sent.', 'easy-customer-invoices' ) );
+			}
+
+			return __( 'The email containing the estimate was sent successfully.', 'easy-customer-invoices' );
 		}
 
 		public function enqueue_scripts() {
@@ -1021,9 +1210,11 @@ if ( ! class_exists( 'WPECI\Admin' ) ) {
 				return;
 			}
 
-			if ( 'email_message' !== $field_slug ) {
+			if ( ! preg_match( '/^([a-z]+)_email_message$/', $field_slug, $matches ) ) {
 				return;
 			}
+
+			$forbidden = ( 'estimate' === $matches[1] ) ? 'invoice' : 'estimate';
 
 			$tags = Emails::instance()->get_registered_tag_descriptions();
 			if ( empty( $tags ) ) {
@@ -1033,6 +1224,10 @@ if ( ! class_exists( 'WPECI\Admin' ) ) {
 			echo '<p class="description">' . __( 'You may use the following tags. These will be replaced dynamically.', 'easy-customer-invoices' ) . '</p>';
 			echo '<ul style="margin:2px 0 5px;color:#666;font-style:italic;">';
 			foreach ( $tags as $tag => $description ) {
+				if ( 0 === strpos( $tag, $forbidden . '_' ) ) {
+
+				}
+
 				echo '<li><span style="width:300px;padding-left:20px;">{' . $tag . '} </span>' . $description . '</li>';
 			}
 			echo '</ul>';
@@ -1049,6 +1244,19 @@ if ( ! class_exists( 'WPECI\Admin' ) ) {
 			}
 
 			wp_send_json_success( Util::make_invoice_id( $year ) );
+		}
+
+		public function ajax_make_estimate_id() {
+			if ( ! check_ajax_referer( 'eci_ajax', 'nonce', false ) ) {
+				wp_send_json_error( __( 'Missing or invalid AJAX nonce.', 'easy-customer-invoices' ) );
+			}
+
+			$year = null;
+			if ( isset( $_REQUEST['year'] ) ) {
+				$year = absint( $_REQUEST['year'] );
+			}
+
+			wp_send_json_success( Util::make_estimate_id( $year ) );
 		}
 
 		public function ajax_make_customer_id() {

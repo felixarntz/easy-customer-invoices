@@ -2,9 +2,9 @@
 
 	$( document ).ready( function() {
 
-		function get_invoice( id, callback ) {
+		function get_entity( type, id, callback ) {
 			$.ajax({
-				url: settings.api_root + 'wpeci/invoices/' + id,
+				url: settings.api_root + 'wpeci/' + type + 's/' + id,
 				method: 'GET',
 				beforeSend: function( xhr ) {
 					xhr.setRequestHeader( 'X-WP-Nonce', settings.api_nonce );
@@ -30,8 +30,8 @@
 			});
 		}
 
-		function get_invoice_id( callback ) {
-			wp.ajax.post( 'wpeci_make_invoice_id', {
+		function get_entity_id( type, callback ) {
+			wp.ajax.post( 'wpeci_make_' + type + '_id', {
 				nonce: settings.ajax_nonce
 			}).done( function( response ) {
 				callback( response );
@@ -42,8 +42,16 @@
 		if ( 'eci_invoice' === $( '#post_type' ).val() ) {
 			$( '#title' ).prop( 'readonly', true );
 			if ( ! $( '#title' ).val() ) {
-				get_invoice_id( function( invoice_id ) {
+				get_entity_id( 'invoice', function( invoice_id ) {
 					$( '#title' ).val( invoice_id );
+					$( '#title-prompt-text' ).addClass( 'screen-reader-text' );
+				});
+			}
+		} else if ( 'eci_estimate' === $( '#post_type' ).val() ) {
+			$( '#title' ).prop( 'readonly', true );
+			if ( ! $( '#title' ).val() ) {
+				get_entity_id( 'estimate', function( estimate_id ) {
+					$( '#title' ).val( estimate_id );
 					$( '#title-prompt-text' ).addClass( 'screen-reader-text' );
 				});
 			}
@@ -103,7 +111,7 @@
 				}
 			});
 		}
-		if ( 0 < $customer.length ) {
+		if ( 0 < $customer.length && 0 < $( '#currency_factor' ).length ) {
 			showhide_currency_factor();
 			$customer.on( 'change', showhide_currency_factor );
 		}

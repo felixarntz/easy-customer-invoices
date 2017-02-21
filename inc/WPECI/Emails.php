@@ -8,6 +8,7 @@
 namespace WPECI;
 
 use WPECI\Entities\Invoice;
+use WPECI\Entities\Estimate;
 use WPECI\Entities\Vendor;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -19,7 +20,7 @@ if ( ! class_exists( 'WPECI\Emails' ) ) {
 	final class Emails {
 		private $tags = array();
 
-		private $current_invoice = null;
+		private $current_entity = null;
 
 		private $current_customer = null;
 
@@ -56,14 +57,74 @@ if ( ! class_exists( 'WPECI\Emails' ) ) {
 		}
 
 		public function send_invoice( $id ) {
-			$this->current_invoice  = Invoice::get( $id );
-			$this->current_customer = $invoice->get_customer();
+			$this->current_entity   = Invoice::get( $id );
+			$this->current_customer = $this->current_entity->get_customer();
 			$this->current_vendor   = Vendor::get();
 
-			$pdf = new PDF( $invoice->get_data( 'title' ) );
-			$pdf->render( $invoice );
+			$pdf = new Invoice_PDF( $this->current_entity->get_data( 'title' ) );
+			$pdf->render( $this->current_entity );
 			$pdf_output = $pdf->finalize( 'S' );
 
+			$footer = $this->build_email_footer();
+
+			$to      = $this->current_customer->get_meta( 'email' );
+			$subject = $this->process_subject( Util::get_invoice_email_subject() );
+			$message = $this->process_message( Util::get_invoice_email_message() );
+			$args    = array(
+				'attachments'      => array( $pdf_output ),
+				'from'             => $this->current_vendor->get_contact( 'email' ),
+				'from_name'        => $this->current_vendor->get_company_info( 'name' ),
+				'header_image'     => $this->current_vendor->get_company_info( 'logo_url' ),
+				'background_color' => Util::get_invoice_email_background_color(),
+				'highlight_color'  => Util::get_invoice_email_highlight_color(),
+				'footer'           => $footer,
+			);
+
+			$email = new Email( $to, $subject, $message, $args );
+			$status = $email->send();
+
+			$this->current_entity   = null;
+			$this->current_customer = null;
+			$this->current_vendor   = null;
+
+			return $status;
+		}
+
+		public function send_estimate( $id ) {
+			$this->current_entity   = Estimate::get( $id );
+			$this->current_customer = $this->current_entity->get_customer();
+			$this->current_vendor   = Vendor::get();
+
+			$pdf = new Invoice_PDF( $this->current_entity->get_data( 'title' ) );
+			$pdf->render( $this->current_entity );
+			$pdf_output = $pdf->finalize( 'S' );
+
+			$footer = $this->build_email_footer();
+
+			$to      = $this->current_customer->get_meta( 'email' );
+			$subject = $this->process_subject( Util::get_estimate_email_subject() );
+			$message = $this->process_message( Util::get_estimate_email_message() );
+			$args    = array(
+				'attachments'      => array( $pdf_output ),
+				'from'             => $this->current_vendor->get_contact( 'email' ),
+				'from_name'        => $this->current_vendor->get_company_info( 'name' ),
+				'header_image'     => $this->current_vendor->get_company_info( 'logo_url' ),
+				'background_color' => Util::get_estimate_email_background_color(),
+				'highlight_color'  => Util::get_estimate_email_highlight_color(),
+				'footer'           => $footer,
+			);
+
+			$email = new Email( $to, $subject, $message, $args );
+			$status = $email->send();
+
+			$this->current_entity   = null;
+			$this->current_customer = null;
+			$this->current_vendor   = null;
+
+			return $status;
+		}
+
+		private function build_email_footer() {
 			$main_name = $this->current_vendor->get_name();
 			$sub_name  = $this->current_vendor->get_company_info( 'name' );
 			if ( empty( $main_name ) ) {
@@ -100,27 +161,7 @@ if ( ! class_exists( 'WPECI\Emails' ) ) {
 			}
 			$footer .= '</p>';
 
-			$to      = $this->current_customer->get_meta( 'email' );
-			$subject = $this->process_subject( Util::get_email_subject() );
-			$message = $this->process_message( Util::get_email_message() );
-			$args    = array(
-				'attachments'      => array( $pdf_output ),
-				'from'             => $this->current_vendor->get_contact( 'email' ),
-				'from_name'        => $this->current_vendor->get_company_info( 'name' ),
-				'header_image'     => $this->current_vendor->get_company_info( 'logo_url' ),
-				'background_color' => Util::get_email_background_color(),
-				'highlight_color'  => Util::get_email_highlight_color(),
-				'footer'           => $footer,
-			);
-
-			$email = new Email( $to, $subject, $message, $args );
-			$status = $email->send();
-
-			$this->current_invoice  = null;
-			$this->current_customer = null;
-			$this->current_vendor   = null;
-
-			return $status;
+			return $footer;
 		}
 
 		private function process_subject( $subject ) {
@@ -144,12 +185,14 @@ if ( ! class_exists( 'WPECI\Emails' ) ) {
 				return $matches[0];
 			}
 
-			return call_user_func( $this->tags[ $tag ]['callback'], $this->current_invoice, $this->current_customer, $this->current_vendor );
+			return call_user_func( $this->tags[ $tag ]['callback'], $this->current_entity, $this->current_customer, $this->current_vendor );
 		}
 
 		private function register_default_tags() {
-			$this->register_tag( 'invoice_id', __( 'Displays the invoice ID.', 'easy-customer-invoices' ), array( $this, 'tag_invoice_id' ) );
-			$this->register_tag( 'invoice_total', __( 'Displays the total amount of the invoice.', 'easy-customer-invoices' ), array( $this, 'tag_invoice_total' ) );
+			$this->register_tag( 'invoice_id', __( 'Displays the invoice ID.', 'easy-customer-invoices' ), array( $this, 'tag_entity_id' ) );
+			$this->register_tag( 'invoice_total', __( 'Displays the total amount of the invoice.', 'easy-customer-invoices' ), array( $this, 'tag_entity_total' ) );
+			$this->register_tag( 'estimate_id', __( 'Displays the estimate ID.', 'easy-customer-invoices' ), array( $this, 'tag_entity_id' ) );
+			$this->register_tag( 'estimate_total', __( 'Displays the total amount of the estimate.', 'easy-customer-invoices' ), array( $this, 'tag_entity_total' ) );
 			$this->register_tag( 'customer_id', __( 'Displays the customer ID.', 'easy-customer-invoices' ), array( $this, 'tag_customer_id' ) );
 			$this->register_tag( 'customer_name', __( 'Displays the first and last name of the customer.', 'easy-customer-invoices' ), array( $this, 'tag_customer_name' ) );
 			$this->register_tag( 'customer_company_name', __( 'Displays the company name of the customer.', 'easy-customer-invoices' ), array( $this, 'tag_customer_company_name' ) );
@@ -158,12 +201,12 @@ if ( ! class_exists( 'WPECI\Emails' ) ) {
 			$this->register_tag( 'pay_within_days', __( 'Displays the number of days in which the invoice needs to be paid.', 'easy-customer-invoices' ), array( $this, 'tag_pay_within_days' ) );
 		}
 
-		private function tag_invoice_id( $invoice, $customer, $vendor ) {
-			return $invoice->get_data( 'title' );
+		private function tag_entity_id( $entity, $customer, $vendor ) {
+			return $entity->get_data( 'title' );
 		}
 
-		private function tag_invoice_total( $invoice, $customer, $vendor ) {
-			return $invoice->format_price( $invoice->get_total() );
+		private function tag_entity_total( $entity, $customer, $vendor ) {
+			return $entity->format_price( $entity->get_total() );
 		}
 
 		private function tag_customer_id( $invoice, $customer, $vendor ) {

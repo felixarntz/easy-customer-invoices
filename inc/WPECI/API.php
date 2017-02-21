@@ -83,6 +83,55 @@ if ( ! class_exists( 'WPECI\API' ) ) {
 				'schema'	=> array( $this, 'get_invoice_schema' ),
 			) );
 
+			register_rest_route( 'wpeci', '/estimates', array(
+				array(
+					'methods'				=> WP_REST_Server::READABLE,
+					'callback'				=> array( $this, 'get_estimates' ),
+					'permission_callback'	=> array( $this, 'check_permissions' ),
+					'args'					=> array(
+						'page'					=> array(
+							'description'			=> __( 'Current page of the estimates collection.', 'easy-customer-invoices' ),
+							'type'					=> 'integer',
+							'default'				=> 1,
+							'sanitize_callback'		=> 'absint',
+						),
+						'per_page'				=> array(
+							'description'			=> __( 'Maximum number of estimates to be returned in result set.', 'easy-customer-invoices' ),
+							'type'					=> 'integer',
+							'default'				=> 10,
+							'sanitize_callback'		=> 'absint',
+						),
+						'customer_id'			=> array(
+							'description'			=> __( 'Customer ID of the customer the estimates belong to.', 'easy-customer-invoices' ),
+							'type'					=> 'integer',
+							'default'				=> 0,
+							'sanitize_callback'		=> 'absint',
+						),
+						'year'					=> array(
+							'description'			=> __( 'Year of the estimates.', 'easy-customer-invoices' ),
+							'type'					=> 'integer',
+							'default'				=> 0,
+							'sanitize_callback'		=> 'absint',
+						),
+						'month'					=> array(
+							'description'			=> __( 'Month of the estimates.', 'easy-customer-invoices' ),
+							'type'					=> 'integer',
+							'default'				=> 0,
+							'sanitize_callback'		=> 'absint',
+						),
+					),
+				),
+				'schema'	=> array( $this, 'get_estimate_schema' ),
+			) );
+			register_rest_route( 'wpeci', '/estimates/(?P<id>[\d]+)', array(
+				array(
+					'methods'				=> WP_REST_Server::READABLE,
+					'callback'				=> array( $this, 'get_estimate' ),
+					'permission_callback'	=> array( $this, 'check_permissions' ),
+				),
+				'schema'	=> array( $this, 'get_estimate_schema' ),
+			) );
+
 			register_rest_route( 'wpeci', '/customers', array(
 				array(
 					'methods'				=> WP_REST_Server::READABLE,
@@ -136,31 +185,8 @@ if ( ! class_exists( 'WPECI\API' ) ) {
 		public function get_invoices( $request ) {
 			$invoices = array();
 
-			$args = array(
-				'post_type'			=> 'eci_invoice',
-				'post_status'		=> 'publish',
-				'posts_per_page'	=> $request['per_page'],
-				'paged'				=> $request['page'],
-			);
-
-			if ( 0 < $request['customer_id'] ) {
-				$args['meta_query'] = array(
-					array(
-						'key'		=> 'customer',
-						'value'		=> $request['customer_id'],
-						'compare'	=> '=',
-						'type'		=> 'NUMERIC',
-					),
-				);
-			}
-
-			if ( 0 < $request['year'] ) {
-				$args['year'] = $request['year'];
-			}
-
-			if ( 0 < $request['month'] ) {
-				$args['monthnum'] = $request['month'];
-			}
+			$args = $this->get_entities_query_args( $request );
+			$args['post_type'] = 'eci_invoice';
 
 			$query = new WP_Query();
 			$posts = $query->query( $args );
@@ -183,6 +209,35 @@ if ( ! class_exists( 'WPECI\API' ) ) {
 
 		public function get_invoice_schema() {
 			return Entities\Invoice::get_api_schema();
+		}
+
+		public function get_estimates( $request ) {
+			$estimates = array();
+
+			$args = $this->get_entities_query_args( $request );
+			$args['post_type'] = 'eci_estimate';
+
+			$query = new WP_Query();
+			$posts = $query->query( $args );
+			foreach ( $posts as $post ) {
+				$estimate = Entities\Estimate::get( $post->ID );
+				$estimates[] = $estimate->prepare_for_api();
+			}
+
+			return $estimates;
+		}
+
+		public function get_estimate( $request ) {
+			$estimate = Entities\Estimate::get( absint( $request['id'] ) );
+			if ( null === $estimate ) {
+				return new WP_Error( 'wpeci_rest_estimate_invalid_id', __( 'Invalid estimate id.', 'easy-customer-invoices' ), array( 'status' => 404 ) );
+			}
+
+			return $estimate->prepare_for_api();
+		}
+
+		public function get_estimate_schema() {
+			return Entities\Estimate::get_api_schema();
 		}
 
 		public function get_customers( $request ) {
@@ -239,6 +294,35 @@ if ( ! class_exists( 'WPECI\API' ) ) {
 
 		public function check_permissions( $request ) {
 			return current_user_can( 'manage_options' );
+		}
+
+		private function get_entities_query_args( $request ) {
+			$args = array(
+				'post_status'		=> 'publish',
+				'posts_per_page'	=> $request['per_page'],
+				'paged'				=> $request['page'],
+			);
+
+			if ( 0 < $request['customer_id'] ) {
+				$args['meta_query'] = array(
+					array(
+						'key'		=> 'customer',
+						'value'		=> $request['customer_id'],
+						'compare'	=> '=',
+						'type'		=> 'NUMERIC',
+					),
+				);
+			}
+
+			if ( 0 < $request['year'] ) {
+				$args['year'] = $request['year'];
+			}
+
+			if ( 0 < $request['month'] ) {
+				$args['monthnum'] = $request['month'];
+			}
+
+			return $args;
 		}
 	}
 

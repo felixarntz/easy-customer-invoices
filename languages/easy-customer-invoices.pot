@@ -1,13 +1,13 @@
-# Copyright (c) 2016-2016 Felix Arntz
+# Copyright (c) 2016-2017 Felix Arntz
 msgid ""
 msgstr ""
 "Project-Id-Version: easy-customer-invoices 1.0.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/plugins/easy-customer-invoices/\n"
-"POT-Creation-Date: 2016-01-23 23:42:51+00:00\n"
+"POT-Creation-Date: 2017-02-21 09:47:28+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2016-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2017-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Felix Arntz <felix-arntz@leaves-and-love.net>\n"
 "Language-Team: Felix Arntz <felix-arntz@leaves-and-love.net>\n"
 "X-Generator: grunt-wp-i18n 0.5.3\n"
@@ -43,554 +43,855 @@ msgid "Month of the invoices."
 msgstr ""
 
 #: inc/WPECI/API.php:93
-msgid "Current page of the customers collection."
+msgid "Current page of the estimates collection."
 msgstr ""
 
 #: inc/WPECI/API.php:99
-msgid "Maximum number of customers to be returned in result set."
+msgid "Maximum number of estimates to be returned in result set."
 msgstr ""
 
 #: inc/WPECI/API.php:105
-msgid "Country ID of the country the customers belong to."
+msgid "Customer ID of the customer the estimates belong to."
 msgstr ""
 
 #: inc/WPECI/API.php:111
-msgid "Year when the customers were registered."
+msgid "Year of the estimates."
 msgstr ""
 
 #: inc/WPECI/API.php:117
+msgid "Month of the estimates."
+msgstr ""
+
+#: inc/WPECI/API.php:142
+msgid "Current page of the customers collection."
+msgstr ""
+
+#: inc/WPECI/API.php:148
+msgid "Maximum number of customers to be returned in result set."
+msgstr ""
+
+#: inc/WPECI/API.php:154
+msgid "Country ID of the country the customers belong to."
+msgstr ""
+
+#: inc/WPECI/API.php:160
+msgid "Year when the customers were registered."
+msgstr ""
+
+#: inc/WPECI/API.php:166
 msgid "Month when the customers were registered."
 msgstr ""
 
-#: inc/WPECI/API.php:178
+#: inc/WPECI/API.php:204
 msgid "Invalid invoice id."
 msgstr ""
 
-#: inc/WPECI/API.php:230
+#: inc/WPECI/API.php:233
+msgid "Invalid estimate id."
+msgstr ""
+
+#: inc/WPECI/API.php:285
 msgid "Invalid customer id."
 msgstr ""
 
-#: inc/WPECI/Admin.php:45 inc/WPECI/Admin.php:517
+#: inc/WPECI/Admin.php:54 inc/WPECI/Admin.php:682
 msgid "Invoice Manager"
 msgstr ""
 
-#: inc/WPECI/Admin.php:49 inc/WPECI/Admin.php:826
+#: inc/WPECI/Admin.php:58 inc/WPECI/Admin.php:1105
 msgid "Invoices"
 msgstr ""
 
-#: inc/WPECI/Admin.php:50
+#: inc/WPECI/Admin.php:59
 msgid "Invoice"
 msgstr ""
 
-#: inc/WPECI/Admin.php:51
+#: inc/WPECI/Admin.php:61
 msgid "Enter invoice ID"
 msgstr ""
 
-#: inc/WPECI/Admin.php:60 inc/WPECI/Admin.php:168
+#: inc/WPECI/Admin.php:70 inc/WPECI/Admin.php:203 inc/WPECI/Admin.php:283
 msgid "Customer"
 msgstr ""
 
-#: inc/WPECI/Admin.php:64 inc/WPECI/Admin.php:113 inc/WPECI/Admin.php:385
+#: inc/WPECI/Admin.php:74 inc/WPECI/Admin.php:129 inc/WPECI/Admin.php:207
+#: inc/WPECI/Admin.php:263 inc/WPECI/Admin.php:501 inc/WPECI/Admin.php:927
+#: inc/WPECI/Stats.php:121
 msgid "Amount"
 msgstr ""
 
-#: inc/WPECI/Admin.php:70
-msgid "Show PDF Invoice"
-msgstr ""
-
-#: inc/WPECI/Admin.php:76
-msgid "Show PDF Invoices"
-msgstr ""
-
-#: inc/WPECI/Admin.php:82 inc/WPECI/Admin.php:197 inc/WPECI/Admin.php:309
-#: inc/WPECI/Admin.php:537
-msgid "General Information"
-msgstr ""
-
-#: inc/WPECI/Admin.php:83
-msgid "Here you can enter general information for the invoice."
-msgstr ""
-
-#: inc/WPECI/Admin.php:88 inc/WPECI/Admin.php:350
-msgid "Customer ID"
-msgstr ""
-
-#: inc/WPECI/Admin.php:97
-msgid "Invoice Content"
-msgstr ""
-
-#: inc/WPECI/Admin.php:98
-msgid "Here you can enter the actual efforts charged for in this invoice."
-msgstr ""
-
-#: inc/WPECI/Admin.php:103
-msgid "Contents"
-msgstr ""
-
-#: inc/WPECI/Admin.php:109 inc/WPECI/Admin.php:380
-msgid "Effort"
-msgstr ""
-
-#: inc/WPECI/Admin.php:122 inc/WPECI/Admin.php:370
-msgid "Service Period"
-msgstr ""
-
-#: inc/WPECI/Admin.php:126
-msgid "Tax Mode"
-msgstr ""
-
-#: inc/WPECI/Admin.php:134
-msgid "Payment"
-msgstr ""
-
-#: inc/WPECI/Admin.php:135
-msgid "Here you can payment-related data for this invoice."
-msgstr ""
-
-#: inc/WPECI/Admin.php:140
+#: inc/WPECI/Admin.php:78 inc/WPECI/Admin.php:156
 msgid "Payment Date"
 msgstr ""
 
-#: inc/WPECI/Admin.php:144
-msgid "Payment Method"
+#: inc/WPECI/Admin.php:83
+msgid "Show PDF Invoice"
 msgstr ""
 
-#: inc/WPECI/Admin.php:149
-msgid "PayPal Fee Amount"
+#: inc/WPECI/Admin.php:87
+msgid "Send Invoice via Email"
+msgstr ""
+
+#: inc/WPECI/Admin.php:93
+msgid "Show PDF Invoices"
+msgstr ""
+
+#: inc/WPECI/Admin.php:99 inc/WPECI/Admin.php:223 inc/WPECI/Admin.php:312
+#: inc/WPECI/Admin.php:425 inc/WPECI/Admin.php:702
+msgid "General Information"
+msgstr ""
+
+#: inc/WPECI/Admin.php:100
+msgid "Here you can enter general information for the invoice."
+msgstr ""
+
+#: inc/WPECI/Admin.php:105 inc/WPECI/Admin.php:229 inc/WPECI/Admin.php:466
+msgid "Customer ID"
+msgstr ""
+
+#: inc/WPECI/Admin.php:112
+msgid "Invoice Content"
+msgstr ""
+
+#: inc/WPECI/Admin.php:113
+msgid "Here you can enter the actual efforts charged for in this invoice."
+msgstr ""
+
+#: inc/WPECI/Admin.php:118 inc/WPECI/Admin.php:252
+msgid "Contents"
+msgstr ""
+
+#: inc/WPECI/Admin.php:124 inc/WPECI/Admin.php:258 inc/WPECI/Admin.php:496
+#: inc/WPECI/Admin.php:923
+msgid "Effort"
+msgstr ""
+
+#: inc/WPECI/Admin.php:138 inc/WPECI/Admin.php:486
+msgid "Service Period"
+msgstr ""
+
+#: inc/WPECI/Admin.php:142 inc/WPECI/Admin.php:272
+msgid "Tax Mode"
 msgstr ""
 
 #: inc/WPECI/Admin.php:150
+msgid "Payment"
+msgstr ""
+
+#: inc/WPECI/Admin.php:151
+msgid "Here you can payment-related data for this invoice."
+msgstr ""
+
+#: inc/WPECI/Admin.php:160
+msgid "Payment Method"
+msgstr ""
+
+#: inc/WPECI/Admin.php:165
+msgid "Deposit Fee Amount"
+msgstr ""
+
+#: inc/WPECI/Admin.php:166
+msgid "Enter the deposit fee (if any)."
+msgstr ""
+
+#: inc/WPECI/Admin.php:172
+msgid "PayPal Fee Amount"
+msgstr ""
+
+#: inc/WPECI/Admin.php:173
 msgid "Enter the amount that PayPal charged for the payment."
 msgstr ""
 
-#: inc/WPECI/Admin.php:156
+#: inc/WPECI/Admin.php:179
 msgid "Currency Factor"
 msgstr ""
 
-#: inc/WPECI/Admin.php:157
+#: inc/WPECI/Admin.php:180
 msgid ""
-"Enter the factor that you have to divide the amount by to calculate it in "
-"your base currency."
+"Enter the factor that you have to multiply the amount with to calculate it "
+"in your base currency."
 msgstr ""
 
-#: inc/WPECI/Admin.php:167
+#: inc/WPECI/Admin.php:191
+msgid "Estimates"
+msgstr ""
+
+#: inc/WPECI/Admin.php:192
+msgid "Estimate"
+msgstr ""
+
+#: inc/WPECI/Admin.php:194
+msgid "Enter estimate ID"
+msgstr ""
+
+#: inc/WPECI/Admin.php:213
+msgid "Show PDF Estimate"
+msgstr ""
+
+#: inc/WPECI/Admin.php:217
+msgid "Send Estimate via Email"
+msgstr ""
+
+#: inc/WPECI/Admin.php:224
+msgid "Here you can enter general information for the estimate."
+msgstr ""
+
+#: inc/WPECI/Admin.php:234 inc/WPECI/Admin.php:947 inc/WPECI/Admin.php:974
+msgid "Message"
+msgstr ""
+
+#: inc/WPECI/Admin.php:235
+msgid "Enter a message to put at the top of the estimate."
+msgstr ""
+
+#: inc/WPECI/Admin.php:239
+msgid "Due Date"
+msgstr ""
+
+#: inc/WPECI/Admin.php:240
+msgid "Enter a date until which this estimate should be valid."
+msgstr ""
+
+#: inc/WPECI/Admin.php:246
+msgid "Estimate Content"
+msgstr ""
+
+#: inc/WPECI/Admin.php:247
+msgid "Here you can enter the actual efforts for the estimate."
+msgstr ""
+
+#: inc/WPECI/Admin.php:282
 msgid "Customers"
 msgstr ""
 
-#: inc/WPECI/Admin.php:169
+#: inc/WPECI/Admin.php:285
 msgid "Enter customer name"
 msgstr ""
 
-#: inc/WPECI/Admin.php:179 inc/WPECI/Admin.php:556
+#: inc/WPECI/Admin.php:294 inc/WPECI/Admin.php:721
 msgid "Name"
 msgstr ""
 
-#: inc/WPECI/Admin.php:183 inc/WPECI/Admin.php:225 inc/WPECI/Admin.php:577
+#: inc/WPECI/Admin.php:298 inc/WPECI/Admin.php:340 inc/WPECI/Admin.php:742
 msgid "Address"
 msgstr ""
 
-#: inc/WPECI/Admin.php:187
+#: inc/WPECI/Admin.php:302
 msgid "Contact"
 msgstr ""
 
-#: inc/WPECI/Admin.php:191 inc/WPECI/Admin.php:447
+#: inc/WPECI/Admin.php:306 inc/WPECI/Admin.php:575
 msgid "Revenue"
 msgstr ""
 
-#: inc/WPECI/Admin.php:198
+#: inc/WPECI/Admin.php:313
 msgid ""
 "Here you can enter static information for the customer that will likely "
 "never change."
 msgstr ""
 
-#: inc/WPECI/Admin.php:203 inc/WPECI/Admin.php:541
+#: inc/WPECI/Admin.php:318 inc/WPECI/Admin.php:706
 msgid "First Name"
 msgstr ""
 
-#: inc/WPECI/Admin.php:208 inc/WPECI/Admin.php:546
+#: inc/WPECI/Admin.php:323 inc/WPECI/Admin.php:711
 msgid "Last Name"
 msgstr ""
 
-#: inc/WPECI/Admin.php:213
+#: inc/WPECI/Admin.php:328
 msgid "Company Name"
 msgstr ""
 
-#: inc/WPECI/Admin.php:219 inc/WPECI/Admin.php:573
+#: inc/WPECI/Admin.php:334 inc/WPECI/Admin.php:738
 msgid "Details"
 msgstr ""
 
-#: inc/WPECI/Admin.php:220
+#: inc/WPECI/Admin.php:335
 msgid ""
 "Specify more detailed information about the customer. The following "
 "information may change from time to time - if it does, simply add a new row "
 "and fill in the information."
 msgstr ""
 
-#: inc/WPECI/Admin.php:230 inc/WPECI/Admin.php:582
+#: inc/WPECI/Admin.php:345 inc/WPECI/Admin.php:747
 msgid "Street & No."
 msgstr ""
 
-#: inc/WPECI/Admin.php:234 inc/WPECI/Admin.php:586
+#: inc/WPECI/Admin.php:349 inc/WPECI/Admin.php:751
 msgid "ZIP Code"
 msgstr ""
 
-#: inc/WPECI/Admin.php:238 inc/WPECI/Admin.php:590
+#: inc/WPECI/Admin.php:353 inc/WPECI/Admin.php:755
 msgid "City"
 msgstr ""
 
-#: inc/WPECI/Admin.php:242 inc/WPECI/Admin.php:262 inc/WPECI/Admin.php:564
-#: inc/WPECI/Admin.php:594 inc/WPECI/Admin.php:618 inc/WPECI/Admin.php:650
-#: inc/WPECI/Admin.php:674
+#: inc/WPECI/Admin.php:357 inc/WPECI/Admin.php:377 inc/WPECI/Admin.php:729
+#: inc/WPECI/Admin.php:759 inc/WPECI/Admin.php:783 inc/WPECI/Admin.php:815
+#: inc/WPECI/Admin.php:839
 msgid "Valid from..."
 msgstr ""
 
-#: inc/WPECI/Admin.php:249 inc/WPECI/Admin.php:657
+#: inc/WPECI/Admin.php:364 inc/WPECI/Admin.php:822
 msgid "Legal Data"
 msgstr ""
 
-#: inc/WPECI/Admin.php:254 inc/WPECI/Admin.php:662
+#: inc/WPECI/Admin.php:369 inc/WPECI/Admin.php:827
 msgid "Tax Number"
 msgstr ""
 
-#: inc/WPECI/Admin.php:258 inc/WPECI/Admin.php:666
+#: inc/WPECI/Admin.php:373 inc/WPECI/Admin.php:831
 msgid "Tax ID"
 msgstr ""
 
-#: inc/WPECI/Admin.php:271
+#: inc/WPECI/Admin.php:386
 msgid "Contact Methods"
 msgstr ""
 
-#: inc/WPECI/Admin.php:272
+#: inc/WPECI/Admin.php:387
 msgid "Add some contact methods to the customer."
 msgstr ""
 
-#: inc/WPECI/Admin.php:277
+#: inc/WPECI/Admin.php:392
 msgid "Email Address"
 msgstr ""
 
-#: inc/WPECI/Admin.php:281 inc/WPECI/Admin.php:606
+#: inc/WPECI/Admin.php:396 inc/WPECI/Admin.php:771
 msgid "Phone"
 msgstr ""
 
-#: inc/WPECI/Admin.php:286
+#: inc/WPECI/Admin.php:401
 msgid "Label"
 msgstr ""
 
-#: inc/WPECI/Admin.php:290
+#: inc/WPECI/Admin.php:405
 msgid "Phone Number"
 msgstr ""
 
-#: inc/WPECI/Admin.php:301
+#: inc/WPECI/Admin.php:416
 msgid "Countries"
 msgstr ""
 
-#: inc/WPECI/Admin.php:302
+#: inc/WPECI/Admin.php:417
 msgid "Country"
 msgstr ""
 
-#: inc/WPECI/Admin.php:310
+#: inc/WPECI/Admin.php:426
 msgid "Here you can enter general information related to this country."
 msgstr ""
 
-#: inc/WPECI/Admin.php:315
+#: inc/WPECI/Admin.php:431
 msgid "Currency"
 msgstr ""
 
-#: inc/WPECI/Admin.php:321
+#: inc/WPECI/Admin.php:437
 msgid "Decimal Separator"
 msgstr ""
 
-#: inc/WPECI/Admin.php:326
+#: inc/WPECI/Admin.php:442
 msgid "Thousands Separator"
 msgstr ""
 
-#: inc/WPECI/Admin.php:331
+#: inc/WPECI/Admin.php:447
 msgid "Date Format"
 msgstr ""
 
-#: inc/WPECI/Admin.php:336 inc/WPECI/Admin.php:405
+#: inc/WPECI/Admin.php:452 inc/WPECI/Admin.php:521
 msgid "Reverse Charge"
 msgstr ""
 
-#: inc/WPECI/Admin.php:338
+#: inc/WPECI/Admin.php:454
 msgid "Is this country reverse charge eligible?"
 msgstr ""
 
-#: inc/WPECI/Admin.php:344
+#: inc/WPECI/Admin.php:460
 msgid "Invoice Texts"
 msgstr ""
 
-#: inc/WPECI/Admin.php:345
+#: inc/WPECI/Admin.php:461
 msgid ""
 "Here you can enter some text for the different sections of an invoice. "
 "These sentences should be localized for this country&#039;s language."
 msgstr ""
 
-#: inc/WPECI/Admin.php:355
+#: inc/WPECI/Admin.php:471
 msgid "Customer Tax ID"
 msgstr ""
 
-#: inc/WPECI/Admin.php:360
+#: inc/WPECI/Admin.php:476
 msgid "Invoice ID"
 msgstr ""
 
-#: inc/WPECI/Admin.php:365
+#: inc/WPECI/Admin.php:481
 msgid "Reference"
 msgstr ""
 
-#: inc/WPECI/Admin.php:375
+#: inc/WPECI/Admin.php:491
 msgid "Invoice Date"
 msgstr ""
 
-#: inc/WPECI/Admin.php:390
+#: inc/WPECI/Admin.php:506 inc/WPECI/Stats.php:29
 msgid "Subtotal"
 msgstr ""
 
-#: inc/WPECI/Admin.php:395
+#: inc/WPECI/Admin.php:511 inc/WPECI/Stats.php:30
 msgid "Tax"
 msgstr ""
 
-#: inc/WPECI/Admin.php:400
+#: inc/WPECI/Admin.php:516 inc/WPECI/Stats.php:31
 msgid "Total"
 msgstr ""
 
-#: inc/WPECI/Admin.php:411
+#: inc/WPECI/Admin.php:527
 msgid "Tax Amount"
 msgstr ""
 
-#: inc/WPECI/Admin.php:417
+#: inc/WPECI/Admin.php:533
 msgid "Small Business Regulation"
 msgstr ""
 
-#: inc/WPECI/Admin.php:423
+#: inc/WPECI/Admin.php:539
 msgid "Please Pay"
 msgstr ""
 
-#: inc/WPECI/Admin.php:429
+#: inc/WPECI/Admin.php:545
 msgid "Paid on X with Y"
 msgstr ""
 
-#: inc/WPECI/Admin.php:435
+#: inc/WPECI/Admin.php:551
 msgid "Thank You"
 msgstr ""
 
-#: inc/WPECI/Admin.php:441
+#: inc/WPECI/Admin.php:557
+msgid "Total in Base Currency"
+msgstr ""
+
+#: inc/WPECI/Admin.php:563
+msgid "Deposit Fee"
+msgstr ""
+
+#: inc/WPECI/Admin.php:569
 msgid "PayPal Fee"
 msgstr ""
 
-#: inc/WPECI/Admin.php:453
+#: inc/WPECI/Admin.php:581
 msgid "Vendor Phone"
 msgstr ""
 
-#: inc/WPECI/Admin.php:458
+#: inc/WPECI/Admin.php:586
 msgid "Vendor Email"
 msgstr ""
 
-#: inc/WPECI/Admin.php:463
+#: inc/WPECI/Admin.php:591
 msgid "Vendor Website"
 msgstr ""
 
-#: inc/WPECI/Admin.php:468
+#: inc/WPECI/Admin.php:596
 msgid "Vendor Bank Account"
 msgstr ""
 
-#: inc/WPECI/Admin.php:473
+#: inc/WPECI/Admin.php:601
 msgid "Vendor Bank Code"
 msgstr ""
 
-#: inc/WPECI/Admin.php:478
+#: inc/WPECI/Admin.php:606
 msgid "Vendor Owner"
 msgstr ""
 
-#: inc/WPECI/Admin.php:483
+#: inc/WPECI/Admin.php:611
 msgid "Vendor Tax Number"
 msgstr ""
 
-#: inc/WPECI/Admin.php:488
+#: inc/WPECI/Admin.php:616
 msgid "Vendor Tax ID"
 msgstr ""
 
-#: inc/WPECI/Admin.php:510
+#: inc/WPECI/Admin.php:621
+msgid "Estimate ID"
+msgstr ""
+
+#: inc/WPECI/Admin.php:626
+msgid "Estimate Date"
+msgstr ""
+
+#: inc/WPECI/Admin.php:631
+msgid "Estimate Due Date"
+msgstr ""
+
+#: inc/WPECI/Admin.php:654
+msgid "All Years"
+msgstr ""
+
+#: inc/WPECI/Admin.php:655
+msgid "Here you can find detailed stats about your business for all years."
+msgstr ""
+
+#: inc/WPECI/Admin.php:663
 msgid "Here you can find detailed stats about your business in %s."
 msgstr ""
 
-#: inc/WPECI/Admin.php:521 inc/WPECI/Admin.php:522
+#: inc/WPECI/Admin.php:668 inc/WPECI/Admin.php:674
+msgid "Hello %s,"
+msgstr ""
+
+#: inc/WPECI/Admin.php:669
+msgid ""
+"You will find your invoice %1$s attached to this email. Please pay it "
+"within %2$s days."
+msgstr ""
+
+#: inc/WPECI/Admin.php:670
+msgid "Thanks for purchasing at %s."
+msgstr ""
+
+#: inc/WPECI/Admin.php:671 inc/WPECI/Admin.php:677
+msgid "Regards,"
+msgstr ""
+
+#: inc/WPECI/Admin.php:675
+msgid "You will find your estimate %s attached to this email."
+msgstr ""
+
+#: inc/WPECI/Admin.php:676
+msgid "Thanks for your interest in our services."
+msgstr ""
+
+#: inc/WPECI/Admin.php:686 inc/WPECI/Admin.php:687
 msgid "Stats"
 msgstr ""
 
-#: inc/WPECI/Admin.php:527 inc/WPECI/Admin.php:528
+#: inc/WPECI/Admin.php:692 inc/WPECI/Admin.php:693
 msgid "Settings"
 msgstr ""
 
-#: inc/WPECI/Admin.php:532
+#: inc/WPECI/Admin.php:697
 msgid "Vendor Data"
 msgstr ""
 
-#: inc/WPECI/Admin.php:533
+#: inc/WPECI/Admin.php:698
 msgid ""
 "Here you should enter information about your own business or about yourself "
 "as a vendor."
 msgstr ""
 
-#: inc/WPECI/Admin.php:538
+#: inc/WPECI/Admin.php:703
 msgid ""
 "Here you can enter static information for your business that will likely "
 "never change."
 msgstr ""
 
-#: inc/WPECI/Admin.php:551
+#: inc/WPECI/Admin.php:716
 msgid "Company Information"
 msgstr ""
 
-#: inc/WPECI/Admin.php:560
+#: inc/WPECI/Admin.php:725
 msgid "Logo"
 msgstr ""
 
-#: inc/WPECI/Admin.php:574
+#: inc/WPECI/Admin.php:739
 msgid ""
 "Specify more detailed information about your business. The following "
 "information may change from time to time - if it does, simply add a new row "
 "and fill in the information."
 msgstr ""
 
-#: inc/WPECI/Admin.php:601
+#: inc/WPECI/Admin.php:766
 msgid "Contact Information"
 msgstr ""
 
-#: inc/WPECI/Admin.php:610 inc/WPECI/Admin.php:793
+#: inc/WPECI/Admin.php:775 inc/WPECI/Admin.php:1072
 msgid "Email"
 msgstr ""
 
-#: inc/WPECI/Admin.php:614
+#: inc/WPECI/Admin.php:779
 msgid "Website"
 msgstr ""
 
-#: inc/WPECI/Admin.php:625
+#: inc/WPECI/Admin.php:790
 msgid "Bank Account"
 msgstr ""
 
-#: inc/WPECI/Admin.php:630
+#: inc/WPECI/Admin.php:795
 msgid "Account Number"
 msgstr ""
 
-#: inc/WPECI/Admin.php:634
+#: inc/WPECI/Admin.php:799
 msgid "Bank Code"
 msgstr ""
 
-#: inc/WPECI/Admin.php:638
+#: inc/WPECI/Admin.php:803
 msgid "Bank Name"
 msgstr ""
 
-#: inc/WPECI/Admin.php:642
+#: inc/WPECI/Admin.php:807
 msgid "IBAN"
 msgstr ""
 
-#: inc/WPECI/Admin.php:646
+#: inc/WPECI/Admin.php:811
 msgid "BIC (SWIFT)"
 msgstr ""
 
-#: inc/WPECI/Admin.php:670
+#: inc/WPECI/Admin.php:835
 msgid "Tax Authority"
 msgstr ""
 
-#: inc/WPECI/Admin.php:685
+#: inc/WPECI/Admin.php:850
 msgid "Options"
 msgstr ""
 
-#: inc/WPECI/Admin.php:686
+#: inc/WPECI/Admin.php:851
 msgid "Here you can adjust some plugin settings."
 msgstr ""
 
-#: inc/WPECI/Admin.php:690
+#: inc/WPECI/Admin.php:855
 msgid "General"
 msgstr ""
 
-#: inc/WPECI/Admin.php:691
+#: inc/WPECI/Admin.php:856
 msgid "Define general settings for the overall behavior."
 msgstr ""
 
-#: inc/WPECI/Admin.php:694
+#: inc/WPECI/Admin.php:859
 msgid "Reference Prefix"
 msgstr ""
 
-#: inc/WPECI/Admin.php:698
+#: inc/WPECI/Admin.php:863
+msgid "Pay Within Days"
+msgstr ""
+
+#: inc/WPECI/Admin.php:864
+msgid "Enter the amount of days in which an invoice must be paid."
+msgstr ""
+
+#: inc/WPECI/Admin.php:871
 msgid "Base Currency"
 msgstr ""
 
-#: inc/WPECI/Admin.php:703
+#: inc/WPECI/Admin.php:876
 msgid "Default Tax Mode"
 msgstr ""
 
-#: inc/WPECI/Admin.php:708
+#: inc/WPECI/Admin.php:881
 msgid "Default Payment Method"
 msgstr ""
 
-#: inc/WPECI/Admin.php:713
+#: inc/WPECI/Admin.php:886
 msgid "Tax Amount (in %)"
 msgstr ""
 
-#: inc/WPECI/Admin.php:720
+#: inc/WPECI/Admin.php:891
+msgid "Default Country"
+msgstr ""
+
+#: inc/WPECI/Admin.php:898
 msgid "Invoice PDF Colors"
 msgstr ""
 
-#: inc/WPECI/Admin.php:721
+#: inc/WPECI/Admin.php:899
 msgid "Specify the colors for the PDF invoices."
 msgstr ""
 
-#: inc/WPECI/Admin.php:724
+#: inc/WPECI/Admin.php:902
 msgid "Text Color"
 msgstr ""
 
-#: inc/WPECI/Admin.php:729
+#: inc/WPECI/Admin.php:907
 msgid "Fill Color"
 msgstr ""
 
-#: inc/WPECI/Admin.php:848 inc/WPECI/Admin.php:861
+#: inc/WPECI/Admin.php:914 inc/WPECI/Admin.php:918
+msgid "Efforts"
+msgstr ""
+
+#: inc/WPECI/Admin.php:915
+msgid "Specify the available efforts to put on your invoices and estimates."
+msgstr ""
+
+#: inc/WPECI/Admin.php:938
+msgid "Invoice Emails"
+msgstr ""
+
+#: inc/WPECI/Admin.php:939
+msgid "Specify data for the invoice emails."
+msgstr ""
+
+#: inc/WPECI/Admin.php:942 inc/WPECI/Admin.php:969
+msgid "Subject"
+msgstr ""
+
+#: inc/WPECI/Admin.php:944
+msgid "Your Invoice %s"
+msgstr ""
+
+#: inc/WPECI/Admin.php:953 inc/WPECI/Admin.php:980
+msgid "Background Color"
+msgstr ""
+
+#: inc/WPECI/Admin.php:958 inc/WPECI/Admin.php:985
+msgid "Highlight Color"
+msgstr ""
+
+#: inc/WPECI/Admin.php:965
+msgid "Estimate Emails"
+msgstr ""
+
+#: inc/WPECI/Admin.php:966
+msgid "Specify data for the estimate emails."
+msgstr ""
+
+#: inc/WPECI/Admin.php:971
+msgid "Your Estimate %s"
+msgstr ""
+
+#: inc/WPECI/Admin.php:1129
+msgid "The email containing the invoice could not be sent."
+msgstr ""
+
+#: inc/WPECI/Admin.php:1132
+msgid "The email containing the invoice was sent successfully."
+msgstr ""
+
+#: inc/WPECI/Admin.php:1139
+msgid "The email containing the estimate could not be sent."
+msgstr ""
+
+#: inc/WPECI/Admin.php:1142
+msgid "The email containing the estimate was sent successfully."
+msgstr ""
+
+#: inc/WPECI/Admin.php:1197
+msgid "Warning:"
+msgstr ""
+
+#: inc/WPECI/Admin.php:1197
+msgid "The following invoices are overdue:"
+msgstr ""
+
+#: inc/WPECI/Admin.php:1224
+msgid "You may use the following tags. These will be replaced dynamically."
+msgstr ""
+
+#: inc/WPECI/Admin.php:1238 inc/WPECI/Admin.php:1251 inc/WPECI/Admin.php:1264
 msgid "Missing or invalid AJAX nonce."
 msgstr ""
 
-#: inc/WPECI/Admin.php:865
+#: inc/WPECI/Admin.php:1268
 msgid "Missing first name."
 msgstr ""
 
-#: inc/WPECI/Admin.php:869
+#: inc/WPECI/Admin.php:1272
 msgid "Missing last name."
 msgstr ""
 
-#: inc/WPECI/Util.php:19
-msgid "US Dollar (%s)"
+#: inc/WPECI/Emails.php:151
+msgid "Phone:"
 msgstr ""
 
-#: inc/WPECI/Util.php:20
-msgid "Euro (%s)"
+#: inc/WPECI/Emails.php:154
+msgid "Email:"
+msgstr ""
+
+#: inc/WPECI/Emails.php:157
+msgid "Website:"
+msgstr ""
+
+#: inc/WPECI/Emails.php:192
+msgid "Displays the invoice ID."
+msgstr ""
+
+#: inc/WPECI/Emails.php:193
+msgid "Displays the total amount of the invoice."
+msgstr ""
+
+#: inc/WPECI/Emails.php:194
+msgid "Displays the estimate ID."
+msgstr ""
+
+#: inc/WPECI/Emails.php:195
+msgid "Displays the total amount of the estimate."
+msgstr ""
+
+#: inc/WPECI/Emails.php:196
+msgid "Displays the customer ID."
+msgstr ""
+
+#: inc/WPECI/Emails.php:197
+msgid "Displays the first and last name of the customer."
+msgstr ""
+
+#: inc/WPECI/Emails.php:198
+msgid "Displays the company name of the customer."
+msgstr ""
+
+#: inc/WPECI/Emails.php:199
+msgid "Displays the first and last name of the vendor."
+msgstr ""
+
+#: inc/WPECI/Emails.php:200
+msgid "Displays the company name of the vendor."
+msgstr ""
+
+#: inc/WPECI/Emails.php:201
+msgid "Displays the number of days in which the invoice needs to be paid."
+msgstr ""
+
+#: inc/WPECI/Stats.php:32
+msgid "Fees"
+msgstr ""
+
+#: inc/WPECI/Stats.php:46
+msgid "Year"
+msgstr ""
+
+#: inc/WPECI/Stats.php:61
+msgid "Month"
+msgstr ""
+
+#: inc/WPECI/Stats.php:106
+msgid "Cumulative"
 msgstr ""
 
 #: inc/WPECI/Util.php:21
-msgid "Pound (%s)"
+msgid "US Dollar (%s)"
 msgstr ""
 
 #: inc/WPECI/Util.php:22
+msgid "Euro (%s)"
+msgstr ""
+
+#: inc/WPECI/Util.php:23
+msgid "Pound (%s)"
+msgstr ""
+
+#: inc/WPECI/Util.php:24
 msgid "Japanese Yen (%s)"
 msgstr ""
 
-#: inc/WPECI/Util.php:51
+#: inc/WPECI/Util.php:53
 msgid "Do not add tax"
 msgstr ""
 
-#: inc/WPECI/Util.php:52
+#: inc/WPECI/Util.php:54
 msgid "Include tax"
 msgstr ""
 
-#: inc/WPECI/Util.php:53
+#: inc/WPECI/Util.php:55
 msgid "Add tax"
 msgstr ""
 
-#: inc/WPECI/Util.php:59
+#: inc/WPECI/Util.php:61
 msgid "Deposit"
 msgstr ""
 
-#: inc/WPECI/Util.php:60
+#: inc/WPECI/Util.php:62
 msgid "PayPal"
+msgstr ""
+
+#: inc/WPECI/Util.php:207 inc/WPECI/Util.php:224
+msgid "Please select..."
+msgstr ""
+
+#: inc/WPECI/Util.php:224
+msgid "No Effort Specified"
 msgstr ""
 
 #. Plugin Name of the plugin/theme
@@ -619,4 +920,24 @@ msgstr ""
 msgid ""
 "wordpress, plugin, customer, invoice, billing, management, "
 "custom-post-type, custom-taxonomy"
+msgstr ""
+
+#: inc/WPECI/Admin.php:60
+msgctxt "invoice title gender"
+msgid "m"
+msgstr ""
+
+#: inc/WPECI/Admin.php:193
+msgctxt "estimate title gender"
+msgid "m"
+msgstr ""
+
+#: inc/WPECI/Admin.php:284
+msgctxt "customer title gender"
+msgid "m"
+msgstr ""
+
+#: inc/WPECI/Admin.php:418
+msgctxt "country title gender"
+msgid "m"
 msgstr ""
