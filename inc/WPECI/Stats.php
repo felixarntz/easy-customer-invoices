@@ -150,6 +150,10 @@ if ( ! class_exists( 'WPECI\Stats' ) ) {
 		}
 
 		public static function maybe_recalculate_invoice_stats() {
+			if ( ! is_user_logged_in() ) {
+				return;
+			}
+
 			$changes = get_transient( 'easy_customer_invoices_change_triggers' );
 			if ( false === $changes ) {
 				return;
