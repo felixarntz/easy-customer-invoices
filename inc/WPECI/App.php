@@ -51,6 +51,15 @@ if ( ! class_exists( 'WPECI\App' ) ) {
 		 * @since 0.5.0
 		 */
 		protected function run() {
+			$path  = ! empty( $_SERVER['REQUEST_URI'] ) ? '/' . ltrim( $_SERVER['REQUEST_URI'], '/' ) : '/';
+			$query = ! empty( $_SERVER['QUERY_STRING'] ) ? $_SERVER['QUERY_STRING'] : '';
+
+			$is_rest = defined( 'REST_REQUEST' ) && REST_REQUEST || strpos( $path, '/' . rest_get_url_prefix() ) || strpos( $query, '?rest_route=' );
+
+			if ( ! is_admin() && ! $is_rest ) {
+				return;
+			}
+
 			Admin::instance()->run();
 			API::Instance()->run();
 			Stats::init();
